@@ -13,4 +13,7 @@ public class ProductDto
     public ProductCategory Category { get; set; }
     public bool IsAvailable { get; set; }
     public DateTime CreatedAt { get; set; }
+    
+    public double AverageRating { get; set; } = 0;
+    public int ReviewCount { get; set; } = 0;
 }

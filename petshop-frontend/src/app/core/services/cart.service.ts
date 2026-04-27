@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AddToCartRequest, Cart, UpdateCartItemRequest } from '../models/cart.models';
 
@@ -30,10 +30,20 @@ export class CartService {
     );
   }
 
-  /** API returns 204 — reload cart after deletion */
-  removeItem(productId: string): Observable<Cart> {
+  removeItem(productId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/items/${productId}`).pipe(
-      switchMap(() => this.getCart())
+      tap(() => {
+        const current = this.cart$.value;
+        if (current) {
+          const updatedItems = current.items.filter(i => i.productId !== productId);
+          this.cart$.next({
+            ...current,
+            items:      updatedItems,
+            totalPrice: updatedItems.reduce((s, i) => s + i.totalPrice, 0),
+            totalItems: updatedItems.reduce((s, i) => s + i.quantity,   0),
+          });
+        }
+      })
     );
   }
 

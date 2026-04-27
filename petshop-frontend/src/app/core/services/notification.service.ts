@@ -9,8 +9,8 @@ export class NotificationService {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
       panelClass: ['success-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
@@ -18,8 +18,8 @@ export class NotificationService {
     this.snackBar.open(message, 'Close', {
       duration: 5000,
       panelClass: ['error-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 }

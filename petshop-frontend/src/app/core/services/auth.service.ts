@@ -8,13 +8,13 @@ import { AuthResponse, LoginRequest, RegisterRequest, UserInfo } from '../models
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'petshop_token';
-  private readonly USER_KEY  = 'petshop_user';
-  private readonly apiUrl    = `${environment.apiUrl}/auth`;
+  private readonly USER_KEY = 'petshop_user';
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
 
   currentUser$ = new BehaviorSubject<UserInfo | null>(null);
 
   isLoggedIn$ = this.currentUser$.pipe(map(u => u !== null));
-  isAdmin$    = this.currentUser$.pipe(map(u => u?.role === 'Admin'));
+  isAdmin$ = this.currentUser$.pipe(map(u => u?.role === 'Admin'));
 
   constructor(private http: HttpClient) {
     this.restoreSession();
@@ -45,8 +45,9 @@ export class AuthService {
   // ── Private helpers ──────────────────────────────────────────────────────────
   private storeToken(response: AuthResponse): void {
     localStorage.setItem(this.TOKEN_KEY, response.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
-    this.currentUser$.next(response.user);
+    const decoded = this.decodeToken(response.token);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(decoded));
+    this.currentUser$.next(decoded);
   }
 
   private restoreSession(): void {
@@ -77,15 +78,15 @@ export class AuthService {
       payload['role'] ?? '';
 
     return {
-      id:          payload['sub']          ?? '',
-      email:       payload['email']        ?? '',
-      firstName:   payload['given_name']   ?? '',
-      lastName:    payload['family_name']  ?? '',
-      role:        roleClaim,
+      id: payload['sub'] ?? '',
+      email: payload['email'] ?? '',
+      firstName: payload['given_name'] ?? '',
+      lastName: payload['family_name'] ?? '',
+      role: roleClaim,
       phoneNumber: payload['phone_number'] ?? null,
-      address:     payload['address']      ?? null,
-      isActive:    true,
-      createdAt:   new Date().toISOString(),
+      address: payload['address'] ?? null,
+      isActive: true,
+      createdAt: new Date().toISOString(),
     };
   }
 }

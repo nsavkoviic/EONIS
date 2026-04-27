@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +11,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -17,16 +18,110 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { ProductService } from '../../../core/services/product.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Product, ProductFilter } from '../../../core/models/product.models';
+
+@Component({
+  selector: 'app-product-dialog',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule,
+    MatInputModule, MatSelectModule, MatButtonModule, MatSlideToggleModule,
+    MatDividerModule, MatIconModule],
+  template: `
+    <h2 mat-dialog-title>{{ data.editMode ? 'Edit Product' : 'Add New Product' }}</h2>
+    <mat-dialog-content>
+      <form [formGroup]="form" class="product-form">
+        <mat-form-field appearance="outline" class="full-w">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+          <mat-error>Required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-w">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+          <mat-error>Required</mat-error>
+        </mat-form-field>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Price (EUR)</mat-label>
+            <input matInput type="number" formControlName="price" min="0.01" step="0.01">
+            <mat-error>Min €0.01</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Stock</mat-label>
+            <input matInput type="number" formControlName="stockQuantity" min="0">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let c of categoryOptions" [value]="c.value">
+                {{ c.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-w">
+          <mat-label>Image URL (optional)</mat-label>
+          <input matInput formControlName="imageUrl">
+        </mat-form-field>
+        <mat-slide-toggle formControlName="isAvailable" color="primary">
+          Available for sale
+        </mat-slide-toggle>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
+        <mat-icon>save</mat-icon> Save
+      </button>
+    </mat-dialog-actions>
+  `,
+  styles: [`
+    .product-form { display:flex; flex-direction:column; gap:8px; padding:8px 0; min-width:500px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+    .form-row mat-form-field { width:100%; }
+    .full-w { width:100%; }
+  `]
+})
+export class ProductDialogComponent {
+  saving = false;
+  categoryOptions = [
+    {value:0,label:'Dogs'},{value:1,label:'Cats'},{value:2,label:'Birds'},
+    {value:3,label:'Fish'},{value:4,label:'Reptiles'},{value:5,label:'Small Animals'},
+    {value:6,label:'Food'},{value:7,label:'Toys'},{value:8,label:'Accessories'},
+    {value:9,label:'Healthcare'},
+  ];
+
+  form = this.fb.group({
+    name:          [this.data.product?.name ?? '', Validators.required],
+    description:   [this.data.product?.description ?? '', Validators.required],
+    price:         [this.data.product?.price ?? 0, [Validators.required, Validators.min(0.01)]],
+    stockQuantity: [this.data.product?.stockQuantity ?? 0, [Validators.required, Validators.min(0)]],
+    category:      [this.data.product?.category ?? 0, Validators.required],
+    imageUrl:      [this.data.product?.imageUrl ?? ''],
+    isAvailable:   [this.data.product?.isAvailable ?? true],
+  });
+
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<ProductDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { product?: Product; editMode: boolean }
+  ) {}
+
+  save(): void {
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    this.dialogRef.close(this.form.value);
+  }
+}
 
 @Component({
   selector: 'app-product-management',
   standalone: true,
   imports: [CommonModule, CurrencyPipe, FormsModule, ReactiveFormsModule,
     MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule,
-    MatInputModule, MatSelectModule, MatProgressSpinnerModule, MatSnackBarModule,
+    MatInputModule, MatSelectModule, MatProgressSpinnerModule,
     MatCardModule, MatChipsModule, MatPaginatorModule, MatTooltipModule,
-    MatSlideToggleModule, MatDividerModule],
+    MatSlideToggleModule, MatDividerModule, MatDialogModule, ProductDialogComponent],
   template: `
     <div class="page-header">
       <h1>Product Management</h1>
@@ -96,56 +191,6 @@ import { Product, ProductFilter } from '../../../core/models/product.models';
         [pageIndex]="filter.page - 1" [pageSizeOptions]="[5,10,25]"
         (page)="onPage($event)"></mat-paginator>
     </div>
-
-    <mat-card class="form-card" *ngIf="showForm">
-      <mat-card-header>
-        <mat-card-title>{{ editMode ? 'Edit Product' : 'Add New Product' }}</mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-content>
-        <form [formGroup]="form" class="product-form">
-          <mat-form-field appearance="outline" class="full-w">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name">
-            <mat-error>Required</mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="full-w">
-            <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" rows="3"></textarea>
-            <mat-error>Required</mat-error>
-          </mat-form-field>
-          <div class="form-row">
-            <mat-form-field appearance="outline">
-              <mat-label>Price (EUR)</mat-label>
-              <input matInput type="number" formControlName="price" min="0.01" step="0.01">
-              <mat-error>Min €0.01</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Stock</mat-label>
-              <input matInput type="number" formControlName="stockQuantity" min="0">
-              <mat-error>Required</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Category</mat-label>
-              <mat-select formControlName="category">
-                <mat-option *ngFor="let c of categoryOptions" [value]="c.value">{{ c.label }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <mat-form-field appearance="outline" class="full-w">
-            <mat-label>Image URL (optional)</mat-label>
-            <input matInput formControlName="imageUrl">
-          </mat-form-field>
-          <mat-slide-toggle formControlName="isAvailable" color="primary">Available for sale</mat-slide-toggle>
-        </form>
-      </mat-card-content>
-      <mat-card-actions align="end">
-        <button mat-button (click)="cancelForm()">Cancel</button>
-        <button mat-raised-button color="primary" (click)="saveProduct()" [disabled]="isSaving">
-          <mat-icon>save</mat-icon> Save
-        </button>
-      </mat-card-actions>
-    </mat-card>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
@@ -161,21 +206,16 @@ import { Product, ProductFilter } from '../../../core/models/product.models';
     .stock-ok   { background:#e8f5e9; color:#2e7d32; }
     .avail-chip { padding:3px 10px; border-radius:12px; font-size:.8rem; font-weight:600; }
     .yes { background:#e8f5e9; color:#2e7d32; } .no { background:#ffebee; color:#c62828; }
-    .form-card { margin-top:8px; } mat-card-content { padding-top:16px; }
-    .product-form { display:flex; flex-direction:column; gap:8px; padding:8px 0; }
-    .form-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
-    .form-row mat-form-field { width:100%; } .full-w { width:100%; }
   `]
 })
-export default class ProductManagementComponent implements OnInit {
+export default class ProductManagementComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   cols = ['image','name','category','price','stock','available','actions'];
   products: Product[] = [];
   totalCount = 0;
   isLoading = false;
   isSaving  = false;
-  showForm  = false;
-  editMode  = false;
-  editingId: string | null = null;
   filter: ProductFilter = { page: 1, pageSize: 10 };
   searchCtrl = new FormControl('');
 
@@ -185,24 +225,24 @@ export default class ProductManagementComponent implements OnInit {
     {value:6,label:'Food'},{value:7,label:'Toys'},{value:8,label:'Accessories'},{value:9,label:'Healthcare'},
   ];
 
-  form = this.fb.group({
-    name:          ['', Validators.required],
-    description:   ['', Validators.required],
-    price:         [0,  [Validators.required, Validators.min(0.01)]],
-    stockQuantity: [0,  [Validators.required, Validators.min(0)]],
-    category:      [0,  Validators.required],
-    imageUrl:      [''],
-    isAvailable:   [true],
-  });
-
-  constructor(private productSvc: ProductService, private fb: FormBuilder, private snackBar: MatSnackBar) {}
+  constructor(
+    private productSvc: ProductService,
+    private dialog: MatDialog,
+    private notify: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
-    this.searchCtrl.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe(t => {
-      this.filter.searchTerm = t || undefined; this.filter.page = 1; this.loadProducts();
-    });
+    this.searchCtrl.valueChanges
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(t => {
+        this.filter.searchTerm = t || undefined;
+        this.filter.page = 1;
+        this.loadProducts();
+      });
   }
+
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 
   loadProducts(): void {
     this.isLoading = true;
@@ -213,35 +253,32 @@ export default class ProductManagementComponent implements OnInit {
   }
 
   openForm(product?: Product): void {
-    this.showForm = true;
-    if (product) {
-      this.editMode = true; this.editingId = product.id;
-      this.form.patchValue({ name: product.name, description: product.description,
-        price: product.price, stockQuantity: product.stockQuantity,
-        category: product.category, imageUrl: product.imageUrl ?? '', isAvailable: product.isAvailable });
-    } else {
-      this.editMode = false; this.editingId = null;
-      this.form.reset({ price: 0, stockQuantity: 0, category: 0, isAvailable: true });
-    }
-  }
+    const dialogRef = this.dialog.open(ProductDialogComponent, {
+      width: '640px',
+      data: { product, editMode: !!product }
+    });
 
-  cancelForm(): void { this.showForm = false; this.form.reset(); }
-
-  saveProduct(): void {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    this.isSaving = true;
-    const val = this.form.value as any;
-    const obs  = this.editMode && this.editingId ? this.productSvc.update(this.editingId, val) : this.productSvc.create(val);
-    obs.subscribe({
-      next: () => { this.snackBar.open('Product saved!', 'Close', { duration: 2000 }); this.cancelForm(); this.loadProducts(); this.isSaving = false; },
-      error: () => this.isSaving = false,
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.isSaving = true;
+      const obs = product
+        ? this.productSvc.update(product.id, result)
+        : this.productSvc.create(result);
+      obs.subscribe({
+        next: () => {
+          this.notify.showSuccess('Product saved!');
+          this.loadProducts();
+          this.isSaving = false;
+        },
+        error: () => this.isSaving = false,
+      });
     });
   }
 
   deleteProduct(id: string): void {
     if (!window.confirm('Delete this product?')) return;
     this.productSvc.delete(id).subscribe(() => {
-      this.snackBar.open('Product deleted', 'Close', { duration: 2000 }); this.loadProducts();
+      this.notify.showSuccess('Product deleted'); this.loadProducts();
     });
   }
 

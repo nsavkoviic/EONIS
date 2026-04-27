@@ -2,43 +2,43 @@ using PetShop.Application.DTOs.Product;
 using PetShop.Application.Interfaces;
 using PetShop.Domain.Entities;
 using PetShop.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using PetShop.Infrastructure.Persistence;
 
 namespace PetShop.Infrastructure.Services;
 
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
+    private readonly AppDbContext _context;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IProductRepository productRepository, AppDbContext context)
     {
         _productRepository = productRepository;
+        _context = context;
     }
 
     public async Task<PagedResponseDto<ProductDto>> GetProductsAsync(ProductFilterDto filter)
     {
-        var query = (await _productRepository.GetAllAsync()).AsQueryable();
+        // Build base query with filters
+        var query = _context.Products.AsQueryable();
 
-        // ── Filtering ─────────────────────────────────────────────────────────
         if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
         {
             var term = filter.SearchTerm.ToLower();
             query = query.Where(p => p.Name.ToLower().Contains(term)
                                   || p.Description.ToLower().Contains(term));
         }
-
         if (filter.Category.HasValue)
             query = query.Where(p => p.Category == filter.Category.Value);
-
         if (filter.MinPrice.HasValue)
             query = query.Where(p => p.Price >= filter.MinPrice.Value);
-
         if (filter.MaxPrice.HasValue)
             query = query.Where(p => p.Price <= filter.MaxPrice.Value);
-
         if (filter.IsAvailable.HasValue)
             query = query.Where(p => p.IsAvailable == filter.IsAvailable.Value);
 
-        // ── Sorting ───────────────────────────────────────────────────────────
+        // Sorting
         query = filter.SortBy?.ToLower() switch
         {
             "price" => filter.SortDescending
@@ -50,14 +50,29 @@ public class ProductService : IProductService
             _ => query.OrderByDescending(p => p.CreatedAt),
         };
 
-        var totalCount = query.Count();
+        var totalCount = await query.CountAsync();
 
-        // ── Pagination ────────────────────────────────────────────────────────
-        var items = query
+        // Single query: join with reviews for aggregated rating
+        var items = await query
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
-            .Select(MapToDto)
-            .ToList();
+            .Select(p => new ProductDto
+            {
+                Id            = p.Id,
+                Name          = p.Name,
+                Description   = p.Description,
+                Price         = p.Price,
+                StockQuantity = p.StockQuantity,
+                ImageUrl      = p.ImageUrl,
+                Category      = p.Category,
+                IsAvailable   = p.IsAvailable,
+                CreatedAt     = p.CreatedAt,
+                ReviewCount   = _context.Reviews.Count(r => r.ProductId == p.Id),
+                AverageRating = _context.Reviews.Where(r => r.ProductId == p.Id).Any()
+                    ? _context.Reviews.Where(r => r.ProductId == p.Id).Average(r => r.Rating)
+                    : 0,
+            })
+            .ToListAsync();
 
         return new PagedResponseDto<ProductDto>
         {
@@ -70,10 +85,28 @@ public class ProductService : IProductService
 
     public async Task<ProductDto> GetByIdAsync(Guid id)
     {
-        var product = await _productRepository.GetByIdAsync(id)
+        var dto = await _context.Products
+            .Where(p => p.Id == id)
+            .Select(p => new ProductDto
+            {
+                Id            = p.Id,
+                Name          = p.Name,
+                Description   = p.Description,
+                Price         = p.Price,
+                StockQuantity = p.StockQuantity,
+                ImageUrl      = p.ImageUrl,
+                Category      = p.Category,
+                IsAvailable   = p.IsAvailable,
+                CreatedAt     = p.CreatedAt,
+                ReviewCount   = _context.Reviews.Count(r => r.ProductId == p.Id),
+                AverageRating = _context.Reviews.Where(r => r.ProductId == p.Id).Any()
+                    ? _context.Reviews.Where(r => r.ProductId == p.Id).Average(r => r.Rating)
+                    : 0,
+            })
+            .FirstOrDefaultAsync()
             ?? throw new NotFoundException(nameof(Product), id);
 
-        return MapToDto(product);
+        return dto;
     }
 
     public async Task<ProductDto> CreateAsync(CreateProductDto dto)

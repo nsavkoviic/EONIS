@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -116,9 +117,14 @@ import { Cart } from '../../core/models/cart.models';
     .pay-btn { min-width:200px; height:48px; }
     .error-msg { display:flex; align-items:center; gap:6px; color:#f44336;
       margin-top:12px; font-size:.9rem; }
+    @media (max-width: 768px) {
+      .page-title { font-size: 1.5rem; }
+      .checkout-container { max-width: 100%; }
+    }
   `]
 })
-export default class CheckoutComponent implements OnInit {
+export default class CheckoutComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   cart: Cart | null = null;
   isProcessing = false;
   errorMsg = '';
@@ -136,16 +142,18 @@ export default class CheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cartSvc.cart$.subscribe(c => {
+    this.cartSvc.cart$.pipe(takeUntil(this.destroy$)).subscribe(c => {
       this.cart = c;
       if (!c || c.items.length === 0) {
-        this.cartSvc.getCart().subscribe(loaded => {
+        this.cartSvc.getCart().pipe(takeUntil(this.destroy$)).subscribe(loaded => {
           if (!loaded || loaded.items.length === 0) this.router.navigate(['/cart']);
         });
       }
     });
-    if (!this.cart) this.cartSvc.getCart().subscribe();
+    if (!this.cart) this.cartSvc.getCart().pipe(takeUntil(this.destroy$)).subscribe();
   }
+
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 
   placeOrder(): void {
     if (this.shippingForm.invalid) { this.shippingForm.markAllAsTouched(); return; }

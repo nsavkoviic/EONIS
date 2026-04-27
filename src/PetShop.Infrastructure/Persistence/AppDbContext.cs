@@ -13,7 +13,10 @@ public class AppDbContext : DbContext
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<Cart> Carts => Set<Cart>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
-    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Payment>      Payments      => Set<Payment>();
+    public DbSet<DiscountCode> DiscountCodes => Set<DiscountCode>();
+    public DbSet<Review>      Reviews      => Set<Review>();
+    public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -118,6 +121,55 @@ public class AppDbContext : DbContext
             entity.HasOne(e => e.Order)
                   .WithMany()
                   .HasForeignKey(e => e.OrderId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ── DiscountCode ─────────────────────────────────────────────────────
+        modelBuilder.Entity<DiscountCode>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.Code).IsUnique();
+            entity.Property(e => e.Code).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.DiscountPercent).HasPrecision(5, 2);
+        });
+
+        // ── Review ───────────────────────────────────────────────────────────
+        modelBuilder.Entity<Review>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Comment).HasMaxLength(1000);
+            entity.Property(e => e.UserName).HasMaxLength(200);
+            
+            // One user can only review a product once
+            entity.HasIndex(e => new { e.ProductId, e.UserId }).IsUnique();
+            
+            entity.HasOne(e => e.Product)
+                  .WithMany()
+                  .HasForeignKey(e => e.ProductId)
+                  .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ── WishlistItem ─────────────────────────────────────────────────────
+        modelBuilder.Entity<WishlistItem>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            
+            // One user can only wishlist a product once
+            entity.HasIndex(e => new { e.UserId, e.ProductId }).IsUnique();
+            
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(e => e.Product)
+                  .WithMany()
+                  .HasForeignKey(e => e.ProductId)
                   .OnDelete(DeleteBehavior.Restrict);
         });
     }

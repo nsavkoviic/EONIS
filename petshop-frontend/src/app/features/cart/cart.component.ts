@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -9,18 +9,20 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartService } from '../../core/services/cart.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { Cart, CartItem } from '../../core/models/cart.models';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
   imports: [CommonModule, CurrencyPipe, FormsModule, RouterLink,
     MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule,
-    MatDividerModule, MatInputModule, MatFormFieldModule, MatSnackBarModule],
+    MatDividerModule, MatInputModule, MatFormFieldModule],
   template: `
-    <h1 class="page-title">Your Shopping Cart</h1>
+    <h1 class="page-title-warm">🛒 Your Shopping Cart</h1>
 
     <div class="spinner-wrap" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
 
@@ -117,22 +119,34 @@ import { Cart, CartItem } from '../../core/models/cart.models';
     .checkout-btn { width:100%; height:48px; margin-bottom:8px; }
     .continue-btn { width:100%; }
     @media(max-width:900px) { .cart-layout { grid-template-columns:1fr; } }
+    @media (max-width: 600px) {
+      .item-row { flex-wrap: wrap; gap: 10px; }
+      .item-img { width: 56px; height: 56px; }
+    }
   `]
 })
-export default class CartComponent implements OnInit {
+export default class CartComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   cart: Cart | null = null;
   isLoading = true;
 
   constructor(
     private cartSvc: CartService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.cartSvc.getCart().subscribe(() => this.isLoading = false);
-    this.cartSvc.cart$.subscribe(c => this.cart = c);
+    this.cartSvc.getCart()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.isLoading = false);
+
+    this.cartSvc.cart$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(c => this.cart = c);
   }
+
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 
   changeQty(item: CartItem, qty: number): void {
     if (qty < 1) {
@@ -148,7 +162,7 @@ export default class CartComponent implements OnInit {
 
   clearCart(): void {
     this.cartSvc.clearCart().subscribe(() =>
-      this.snackBar.open('Cart cleared', 'Close', { duration: 2000 })
+      this.notify.showSuccess('Cart cleared')
     );
   }
 

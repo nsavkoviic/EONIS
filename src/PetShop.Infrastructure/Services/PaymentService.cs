@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
@@ -6,6 +7,7 @@ using PetShop.Application.Interfaces;
 using PetShop.Domain.Entities;
 using PetShop.Domain.Enums;
 using PetShop.Domain.Exceptions;
+using PetShop.Infrastructure.Persistence;
 using PetShop.Infrastructure.Settings;
 
 namespace PetShop.Infrastructure.Services;
@@ -15,15 +17,18 @@ public class PaymentService : IPaymentService
     private readonly IPaymentRepository _paymentRepository;
     private readonly IOrderRepository   _orderRepository;
     private readonly StripeSettings     _stripeSettings;
+    private readonly AppDbContext       _context;
 
     public PaymentService(
         IPaymentRepository      paymentRepository,
         IOrderRepository        orderRepository,
-        IOptions<StripeSettings> stripeSettings)
+        IOptions<StripeSettings> stripeSettings,
+        AppDbContext            context)
     {
         _paymentRepository = paymentRepository;
         _orderRepository   = orderRepository;
         _stripeSettings    = stripeSettings.Value;
+        _context           = context;
 
         StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
     }
@@ -100,7 +105,8 @@ public class PaymentService : IPaymentService
         try
         {
             stripeEvent = EventUtility.ConstructEvent(
-                payload, stripeSignature, _stripeSettings.WebhookSecret);
+                payload, stripeSignature, _stripeSettings.WebhookSecret,
+                throwOnApiVersionMismatch: false);
         }
         catch (StripeException ex)
         {
@@ -115,18 +121,36 @@ public class PaymentService : IPaymentService
             var payment = await _paymentRepository.GetByStripeSessionIdAsync(session.Id);
             if (payment is null) return;
 
-            payment.Status                  = PaymentStatus.Succeeded;
-            payment.StripePaymentIntentId   = session.PaymentIntentId;
+            payment.Status                = PaymentStatus.Succeeded;
+            payment.StripePaymentIntentId = session.PaymentIntentId;
             await _paymentRepository.UpdateAsync(payment);
 
             // Advance order status
             var order = await _orderRepository.GetByIdAsync(payment.OrderId);
             if (order is not null)
             {
-                order.Status                  = OrderStatus.Processing;
-                order.StripePaymentIntentId   = session.PaymentIntentId;
-                order.StripeSessionId         = session.Id;
+                order.Status                = OrderStatus.Processing;
+                order.StripePaymentIntentId = session.PaymentIntentId;
+                order.StripeSessionId       = session.Id;
                 await _orderRepository.UpdateAsync(order);
+
+                // Clear cart — isolated so a failure here never rolls back payment/order
+                try
+                {
+                    var cart = await _context.Carts
+                        .Include(c => c.CartItems)
+                        .FirstOrDefaultAsync(c => c.UserId == order.UserId);
+
+                    if (cart is not null && cart.CartItems.Any())
+                    {
+                        _context.CartItems.RemoveRange(cart.CartItems);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception cartEx)
+                {
+                    Console.WriteLine($"[Webhook] Cart clear failed: {cartEx.Message}");
+                }
             }
         }
         else if (stripeEvent.Type == "checkout.session.expired"

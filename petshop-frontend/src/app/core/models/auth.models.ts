@@ -29,3 +29,21 @@ export interface AuthResponse {
   expiresAt: string;
   user: UserInfo;
 }
+
+export interface PetEntry {
+  animalType: number;
+  name: string;
+  breed?: string;
+  ageYears?: number;
+}
+
+export interface UserProfileDto {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber?: string;
+  address?: string;
+  favoriteAnimalTypes: number[];
+  currentPets: PetEntry[];
+}

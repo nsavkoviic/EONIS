@@ -20,6 +20,10 @@ export const routes: Routes = [
   { path: 'auth/register',
     loadComponent: () => import('./features/auth/register/register.component') },
 
+  { path: 'wishlist',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/wishlist/wishlist.component') },
+
   { path: 'cart',
     canActivate: [authGuard],
     loadComponent: () => import('./features/cart/cart.component') },
@@ -27,6 +31,10 @@ export const routes: Routes = [
   { path: 'checkout',
     canActivate: [authGuard],
     loadComponent: () => import('./features/checkout/checkout.component') },
+
+  { path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/profile/profile.component') },
 
   { path: 'orders',
     canActivate: [authGuard],
@@ -43,6 +51,9 @@ export const routes: Routes = [
   { path: 'admin/transactions',
     canActivate: [adminGuard],
     loadComponent: () => import('./features/admin/transactions/transactions.component') },
+
+  { path: 'ai-assistant',
+    loadComponent: () => import('./features/ai-assistant/ai-assistant.component') },
 
   { path: '**', redirectTo: 'home' },
 ];

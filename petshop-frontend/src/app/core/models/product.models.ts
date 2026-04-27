@@ -21,6 +21,8 @@ export interface Product {
   category: ProductCategory;
   isAvailable: boolean;
   createdAt: string;
+  averageRating: number;
+  reviewCount: number;
 }
 
 export interface CreateProductRequest {

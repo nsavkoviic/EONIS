@@ -18,15 +18,15 @@ import { NotificationService } from '../../../core/services/notification.service
     MatCardModule, MatFormFieldModule, MatInputModule,
     MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   template: `
-    <div class="auth-container">
-      <mat-card class="auth-card">
-        <mat-card-header>
-          <mat-card-title>Welcome Back</mat-card-title>
-          <mat-card-subtitle>Sign in to your PetShop account</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-logo">🐾</div>
+        <h2 class="auth-title">Welcome Back</h2>
+        <p class="auth-subtitle">Sign in to your PetShop account</p>
+        
+        <div>
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" class="full-width field-group">
               <mat-label>Email</mat-label>
               <input matInput type="email" formControlName="email"
                 autocomplete="email"
@@ -35,7 +35,7 @@ import { NotificationService } from '../../../core/services/notification.service
               <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email format</mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" class="full-width field-group">
               <mat-label>Password</mat-label>
               <input matInput [type]="showPwd ? 'text' : 'password'"
                 formControlName="password" autocomplete="current-password"
@@ -52,21 +52,48 @@ import { NotificationService } from '../../../core/services/notification.service
               <span *ngIf="!isLoading">Sign In</span>
             </button>
           </form>
-        </mat-card-content>
-        <mat-card-actions>
+        </div>
+        <div class="auth-footer">
           <p>Don't have an account? <a routerLink="/auth/register">Register</a></p>
-        </mat-card-actions>
-      </mat-card>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
-    .auth-container { display:flex; justify-content:center; padding:40px 16px; }
-    .auth-card { width:100%; max-width:400px; padding:16px; }
-    mat-card-title { font-size:1.6rem; }
-    mat-card-header { margin-bottom:24px; }
-    .full-width { width:100%; }
-    .submit-btn { margin-top:8px; height:48px; }
-    mat-card-actions { text-align:center; }
+    .auth-page {
+      min-height: calc(100vh - 68px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 16px;
+      background: linear-gradient(135deg, #fff8f0 0%, #fff3e0 100%);
+    }
+    .auth-card {
+      width: 100%; max-width: 420px;
+      background: white; border-radius: 24px;
+      border: 1px solid #f0e6d3;
+      box-shadow: 0 20px 60px rgba(245,124,0,.12);
+      padding: 40px;
+    }
+    .auth-logo { text-align: center; font-size: 2.5rem; margin-bottom: 8px; }
+    .auth-title {
+      text-align: center; font-size: 1.8rem; font-weight: 800;
+      color: #1a1a1a; margin: 0 0 6px;
+    }
+    .auth-subtitle { text-align: center; color: #6b7280; margin: 0 0 32px; }
+    .field-group { margin-bottom: 16px; }
+    .field-label { font-size: .85rem; font-weight: 600; color: #374151; margin-bottom: 6px; display: block; }
+    .full-width { width: 100%; }
+    .submit-btn {
+      width: 100%; height: 52px; font-size: 1rem !important;
+      font-weight: 700 !important; border-radius: 12px !important;
+      margin-top: 8px;
+      background: linear-gradient(135deg, #f57c00, #e65100) !important;
+      box-shadow: 0 4px 16px rgba(245,124,0,.35) !important;
+    }
+    .submit-btn:hover { transform: translateY(-1px) !important; box-shadow: 0 8px 24px rgba(245,124,0,.45) !important; }
+    .auth-footer { text-align: center; margin-top: 24px; color: #6b7280; font-size: .9rem; }
+    .auth-footer a { color: #f57c00; font-weight: 600; text-decoration: none; }
+    .error-msg { background: #fff1f2; border: 1px solid #fecdd3; color: #be123c;
+      padding: 10px 14px; border-radius: 10px; font-size: .85rem; margin-bottom: 16px; }
   `]
 })
 export default class LoginComponent {

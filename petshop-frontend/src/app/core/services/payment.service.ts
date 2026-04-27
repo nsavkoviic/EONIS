@@ -29,4 +29,26 @@ export class PaymentService {
     if (to)   params = params.set('to', to.toISOString());
     return this.http.get<Transaction[]>(`${this.apiUrl}/transactions`, { params });
   }
+
+  validateDiscount(code: string): Observable<any> {
+    const params = new HttpParams().set('code', code);
+    return this.http.get<any>(`${this.apiUrl}/validate-discount`, { params });
+  }
+
+  // ── Admin Coupon CRUD ─────────────────────────────────────────────────
+  getDiscountCodes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/discount-codes`);
+  }
+
+  createDiscountCode(dto: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/discount-codes`, dto);
+  }
+
+  updateDiscountCode(id: string, dto: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/discount-codes/${id}`, dto);
+  }
+
+  deleteDiscountCode(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/discount-codes/${id}`);
+  }
 }
