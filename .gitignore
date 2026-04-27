@@ -10,6 +10,9 @@ appsettings.json
 appsettings.*.json
 !appsettings.example.json
 
+# Angular env (local secrets)
+petshop-frontend/src/environments/environment.ts
+
 # ── .NET / C# ───────────────────────────────────────────────
 [Bb]in/
 [Oo]bj/
