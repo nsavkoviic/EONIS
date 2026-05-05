@@ -1,0 +1,94 @@
+    <h1 class="page-title-warm">📦 My Orders</h1>
+    <div class="spinner-wrap" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="!isLoading && orders.length === 0">
+      <mat-icon class="big-icon">receipt_long</mat-icon>
+      <h3>No orders yet</h3>
+      <a mat-raised-button color="primary" routerLink="/products">Start Shopping</a>
+    </div>
+
+    <!-- Orders -->
+    <mat-accordion *ngIf="!isLoading && orders.length > 0">
+      <mat-expansion-panel *ngFor="let order of orders" class="order-panel"
+        (opened)="loadOrderDetails(order.id)">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-title">
+            <span class="order-id">#{{ order.id.slice(0,8).toUpperCase() }}</span>
+            <span class="order-date">{{ order.orderDate | date:'dd MMM yyyy' }}</span>
+          </mat-panel-title>
+          <mat-panel-description class="panel-desc">
+            <span class="order-total">{{ order.totalAmount | currency:'EUR' }}</span>
+            <span class="status-chip" [ngClass]="getStatusClass(order.status)">
+              {{ getStatusLabel(order.status) }}
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- Panel content — loaded lazily -->
+        <div class="order-detail">
+          <div class="spinner-wrap-sm" *ngIf="!expandedOrders[order.id]">
+            <mat-spinner diameter="32"></mat-spinner>
+          </div>
+
+          <ng-container *ngIf="expandedOrders[order.id] as full">
+            <div class="review-hint" *ngIf="isEligibleForReview(order.status)">
+              ⭐ You can now rate the products from this order!
+            </div>
+
+            <!-- Timeline -->
+            <div class="order-timeline">
+              <div class="timeline-step" *ngFor="let step of getTimeline(order.status)"
+                [class.completed]="step.completed" [class.active]="step.active">
+                <div class="step-icon">
+                  <mat-icon>{{ step.icon }}</mat-icon>
+                </div>
+                <div class="step-label">{{ step.label }}</div>
+              </div>
+            </div>
+
+            <!-- Items table -->
+            <table class="items-table">
+              <thead>
+                <tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of full.items">
+                  <td class="item-cell">
+                    <img [src]="item.productImageUrl || 'https://placehold.co/40x40?text=?'" class="item-thumb">
+                    <span>{{ item.productName }}</span>
+                  </td>
+                  <td>{{ item.quantity }}</td>
+                  <td>{{ item.unitPrice | currency:'EUR' }}</td>
+                  <td><strong>{{ item.totalPrice | currency:'EUR' }}</strong></td>
+                  <td style="text-align: right">
+                    <a mat-stroked-button [routerLink]="['/products', item.productId]"
+                      [fragment]="'reviews'"
+                      *ngIf="isEligibleForReview(order.status)"
+                      class="review-btn" style="font-size:.75rem; height:28px; line-height:28px;">
+                      <mat-icon style="font-size:14px">star</mat-icon> Rate
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <mat-divider style="margin:12px 0"></mat-divider>
+
+            <div class="detail-meta">
+              <p *ngIf="full.shippingAddress">
+                <mat-icon class="meta-icon">local_shipping</mat-icon>
+                <strong>Shipping:</strong> {{ full.shippingAddress }}
+              </p>
+              <p *ngIf="full.stripePaymentIntentId">
+                <mat-icon class="meta-icon">payment</mat-icon>
+                <strong>Payment:</strong>
+                <code [matTooltip]="full.stripePaymentIntentId!">
+                  {{ full.stripePaymentIntentId!.slice(0, 24) }}...
+                </code>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>

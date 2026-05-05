@@ -1,0 +1,157 @@
+    <div class="checkout-container">
+      <h1 class="page-title"><mat-icon>shopping_bag</mat-icon> Checkout</h1>
+
+      <mat-stepper [linear]="true" #stepper class="stepper">
+
+        <!-- STEP 1: Order Summary -->
+        <mat-step label="Order Summary">
+          <ng-container *ngIf="cart">
+
+            <div class="items-list">
+              <div class="item-row" *ngFor="let item of cart.items">
+                <img [src]="item.productImageUrl || 'https://placehold.co/48x48?text=?'"
+                     [alt]="item.productName" class="item-img">
+                <div class="item-info">
+                  <div class="item-name">{{ item.productName }}</div>
+                  <div class="item-meta">{{ item.quantity }} × {{ item.unitPrice | currency:'EUR' }}</div>
+                </div>
+                <div class="item-total">{{ item.totalPrice | currency:'EUR' }}</div>
+              </div>
+            </div>
+
+            <div class="free-shipping-banner" *ngIf="(cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD">
+              🎉 You qualify for FREE shipping on this order!
+            </div>
+
+            <h3 class="section-label">Select Shipping Method</h3>
+            <div class="shipping-grid">
+              <div *ngFor="let opt of shippingOptions"
+                   class="shipping-card" [class.selected]="selectedShipping?.id === opt.id"
+                   (click)="selectedShipping = opt">
+                <div class="ship-logo">{{ opt.logo }}</div>
+                <div class="ship-name">{{ opt.name }}</div>
+                <div class="ship-price" [class.free-price]="(cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD">
+                  {{ (cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD ? 'FREE 🎉' : (opt.price | currency:'EUR') }}
+                </div>
+                <div class="ship-days">{{ opt.estimatedDays }}</div>
+              </div>
+            </div>
+
+            <h3 class="section-label">Have a discount code?</h3>
+            <div class="discount-row">
+              <mat-form-field appearance="outline" class="discount-input">
+                <mat-label>Discount code</mat-label>
+                <input matInput [(ngModel)]="discountCode" [ngModelOptions]="{standalone:true}"
+                       placeholder="e.g. WELCOME10">
+                <mat-hint>Try: WELCOME10 (10%) or PETLOVER20 (20%)</mat-hint>
+              </mat-form-field>
+              <button mat-raised-button color="accent" (click)="validateDiscount()"
+                [disabled]="isValidatingDiscount || !discountCode.trim()">
+                <mat-spinner diameter="16" *ngIf="isValidatingDiscount"></mat-spinner>
+                <span *ngIf="!isValidatingDiscount">Apply</span>
+              </button>
+            </div>
+            <div class="discount-success" *ngIf="discountResult?.isValid">
+              ✅ <strong>{{ discountResult!.code }}</strong> — {{ discountResult!.percent }}% discount applied!
+            </div>
+            <div class="discount-error" *ngIf="discountError">{{ discountError }}</div>
+
+            <div class="summary-box">
+              <div class="summary-line">
+                <span>Subtotal</span><span>{{ cart.totalPrice | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-line discount-line" *ngIf="discountResult?.isValid">
+                <span>Discount ({{ discountResult!.percent }}%)</span>
+                <span class="green">-{{ discountAmount | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-line">
+                <span>Shipping</span>
+                <span [class.green]="shippingCost === 0">
+                  {{ shippingCost === 0 ? 'FREE' : (shippingCost | currency:'EUR') }}
+                </span>
+              </div>
+              <mat-divider style="margin:10px 0"></mat-divider>
+              <div class="summary-line">
+                <span>Total</span>
+                <span class="summary-total">{{ orderTotal | currency:'EUR' }}</span>
+              </div>
+            </div>
+
+            <div style="margin-top:20px">
+              <button mat-raised-button color="primary" matStepperNext
+                [disabled]="!selectedShipping">
+                Continue to Details <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </mat-step>
+
+        <!-- STEP 2: Shipping Details -->
+        <mat-step label="Your Details" [stepControl]="shippingForm">
+          <form [formGroup]="shippingForm">
+
+            <div class="recap-bar" *ngIf="selectedShipping && cart">
+              <span>{{ selectedShipping.logo }} {{ selectedShipping.name }}</span>
+              <span>•</span>
+              <span>{{ cart.totalItems }} item{{ cart.totalItems !== 1 ? 's' : '' }}</span>
+              <span>•</span>
+              <strong>Total: {{ orderTotal | currency:'EUR' }}</strong>
+            </div>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName">
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input matInput formControlName="lastName">
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Phone</mat-label>
+                <input matInput formControlName="phone" type="tel">
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Street Address</mat-label>
+                <input matInput formControlName="street">
+                <mat-error>Min 3 characters</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city">
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>ZIP / Postal Code</mat-label>
+                <input matInput formControlName="zipCode">
+                <mat-error>4–10 digits required</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Country</mat-label>
+                <input matInput formControlName="country">
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="error-msg" *ngIf="errorMsg">
+              <mat-icon>error</mat-icon> {{ errorMsg }}
+            </div>
+
+            <div class="action-row">
+              <button mat-button matStepperPrevious type="button">
+                <mat-icon>arrow_back</mat-icon> Back
+              </button>
+              <button mat-raised-button color="primary" class="pay-btn"
+                type="button" [disabled]="isProcessing" (click)="placeOrder()">
+                <mat-spinner diameter="20" *ngIf="isProcessing" style="display:inline-block"></mat-spinner>
+                <span *ngIf="!isProcessing"><mat-icon>lock</mat-icon> Place Order &amp; Pay</span>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+      </mat-stepper>
+    </div>
