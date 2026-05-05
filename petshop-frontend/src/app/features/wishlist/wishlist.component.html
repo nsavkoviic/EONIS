@@ -1,0 +1,46 @@
+    <h1 class="page-title-warm">❤️ My Wishlist</h1>
+
+    <div class="spinner-wrap" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+
+    <div class="empty-state" *ngIf="!isLoading && items.length === 0">
+      <mat-icon class="huge-icon">favorite_border</mat-icon>
+      <h2>Your wishlist is empty</h2>
+      <p>Save items you love to your wishlist to easily find them later.</p>
+      <a mat-raised-button color="primary" routerLink="/products" class="explore-btn">
+        Explore Products
+      </a>
+    </div>
+
+    <div class="products-grid" *ngIf="!isLoading && items.length > 0">
+      <div class="product-card" *ngFor="let item of items"
+        (click)="router.navigate(['/products', item.productId])">
+        <div class="img-wrapper">
+          <img [src]="item.productImageUrl || 'https://placehold.co/400x200?text=No+Image'"
+               [alt]="item.productName" class="product-img">
+          <span class="category-chip-abs">Saved</span>
+        </div>
+        <div class="card-body">
+          <h3 class="product-name">{{ item.productName }}</h3>
+          <div class="price-row">
+            <span class="price">{{ item.productPrice | currency:'EUR' }}</span>
+            <span class="stock-badge" [class.in-stock]="item.productIsAvailable"
+                  [class.out-stock]="!item.productIsAvailable">
+              {{ item.productIsAvailable ? 'In Stock' : 'Out of Stock' }}
+            </span>
+          </div>
+        </div>
+        <div class="card-actions" (click)="$event.stopPropagation()">
+          <button class="wishlist-card-btn wishlisted"
+            (click)="removeItem(item.productId)"
+            title="Remove from wishlist">
+            <mat-icon>favorite</mat-icon>
+          </button>
+          <button class="cart-card-btn"
+            (click)="addToCart(item)"
+            [disabled]="!item.productIsAvailable">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
