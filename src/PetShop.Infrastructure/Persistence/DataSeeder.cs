@@ -137,6 +137,174 @@ public static class DataSeeder
             }
         );
 
+        // Fish
+        context.Products.AddRange(
+            new Product
+            {
+                Name          = "Tetra AquaArt Aquarium 60L",
+                Description   = "Complete starter aquarium set with built-in LED lighting and silent filter system. Ideal for tropical fish beginners.",
+                Price         = 89.99m,
+                StockQuantity = 20,
+                Category      = ProductCategory.Fish,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=400&h=400&fit=crop",
+            },
+            new Product
+            {
+                Name          = "TetraMin Tropical Flake Food 100g",
+                Description   = "Complete balanced flake food for all tropical fish. Enriched with vitamins for vibrant colors and healthy digestion.",
+                Price         = 6.99m,
+                StockQuantity = 120,
+                Category      = ProductCategory.Fish,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=400&h=400&fit=crop",
+            }
+        );
+
+        // Reptiles
+        context.Products.AddRange(
+            new Product
+            {
+                Name          = "Exo Terra Glass Terrarium 60x45x45cm",
+                Description   = "Front-opening glass terrarium with dual door system, escape-proof screen top and built-in closable inlets. Suitable for geckos, bearded dragons and other reptiles.",
+                Price         = 149.99m,
+                StockQuantity = 12,
+                Category      = ProductCategory.Reptiles,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=400&h=400&fit=crop",
+            },
+            new Product
+            {
+                Name          = "Zoo Med ReptiSun 10.0 UVB Lamp 18W",
+                Description   = "High-output UVB lamp essential for calcium metabolism in reptiles. Prevents metabolic bone disease. Recommended for desert reptiles.",
+                Price         = 24.99m,
+                StockQuantity = 35,
+                Category      = ProductCategory.Reptiles,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop",
+            }
+        );
+
+        // Small Animals
+        context.Products.AddRange(
+            new Product
+            {
+                Name          = "Ferplast Criceti 9 Hamster Cage",
+                Description   = "Spacious hamster cage with multiple levels, exercise wheel, water bottle and food dish included. Easy to clean with removable base.",
+                Price         = 39.99m,
+                StockQuantity = 25,
+                Category      = ProductCategory.SmallAnimals,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop",
+            },
+            new Product
+            {
+                Name          = "Vitakraft Menu Vital Hamster Food 400g",
+                Description   = "Complete hamster mix with grains, seeds, vegetables and protein-rich insects. Natural ingredients for balanced nutrition.",
+                Price         = 5.49m,
+                StockQuantity = 80,
+                Category      = ProductCategory.SmallAnimals,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop",
+            }
+        );
+
+        // Food (universal)
+        context.Products.AddRange(
+            new Product
+            {
+                Name          = "Hill's Science Diet Adult Dry Food 4kg",
+                Description   = "Veterinarian recommended dry food with precise nutrition for adult pets. Made with natural ingredients and no artificial colors or preservatives.",
+                Price         = 44.99m,
+                StockQuantity = 50,
+                Category      = ProductCategory.Food,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&h=400&fit=crop",
+            },
+            new Product
+            {
+                Name          = "Purina Pro Plan Wet Food Multipack 12x85g",
+                Description   = "Premium wet food in gravy with real meat. High protein content supports lean muscle mass. Suitable for cats and small dogs.",
+                Price         = 18.99m,
+                StockQuantity = 65,
+                Category      = ProductCategory.Food,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?w=400&h=400&fit=crop",
+            }
+        );
+
+        // Toys
+        context.Products.AddRange(
+            new Product
+            {
+                Name          = "Outward Hound Hide-A-Squirrel Puzzle Toy",
+                Description   = "Interactive plush puzzle toy that challenges dogs to find hidden squeaky squirrels inside a tree trunk. Great for mental stimulation.",
+                Price         = 16.99m,
+                StockQuantity = 45,
+                Category      = ProductCategory.Toys,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&h=400&fit=crop",
+            },
+            new Product
+            {
+                Name          = "Catit Senses 2.0 Digger Interactive Toy",
+                Description   = "Slows down fast eaters while providing mental stimulation. Tubes of varying heights encourage cats to use their paws to retrieve food.",
+                Price         = 21.99m,
+                StockQuantity = 38,
+                Category      = ProductCategory.Toys,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=400&h=400&fit=crop",
+            }
+        );
+
+        // Accessories
+        context.Products.AddRange(
+            new Product
+            {
+                Name          = "Petkit Eversweet Smart Pet Water Fountain",
+                Description   = "Smart automatic water fountain with triple filtration system. Keeps water fresh and encourages pets to drink more. Ultra-quiet pump.",
+                Price         = 34.99m,
+                StockQuantity = 30,
+                Category      = ProductCategory.Accessories,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=400&fit=crop",
+            },
+            new Product
+            {
+                Name          = "MidWest Homes Foldable Metal Pet Crate",
+                Description   = "Durable double-door folding metal crate for dogs. Includes removable tray, divider panel and carrying handle. Easy to set up and store.",
+                Price         = 59.99m,
+                StockQuantity = 18,
+                Category      = ProductCategory.Accessories,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop",
+            }
+        );
+
+        // Healthcare
+        context.Products.AddRange(
+            new Product
+            {
+                Name          = "Frontline Plus Flea & Tick Treatment 3 Pipettes",
+                Description   = "Fast-acting flea and tick treatment for dogs. Kills fleas within 24 hours and ticks within 48 hours. Waterproof formula lasts 4 weeks.",
+                Price         = 28.99m,
+                StockQuantity = 55,
+                Category      = ProductCategory.Healthcare,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop",
+            },
+            new Product
+            {
+                Name          = "Beaphar Vitamin Supplement for Pets 50ml",
+                Description   = "Multi-vitamin liquid supplement supporting immune system, coat health and energy levels. Suitable for dogs, cats and small animals.",
+                Price         = 12.49m,
+                StockQuantity = 70,
+                Category      = ProductCategory.Healthcare,
+                IsAvailable   = true,
+                ImageUrl      = "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop",
+            }
+        );
+
         // ── Discount Codes ───────────────────────────────────────────────
         if (!context.DiscountCodes.Any())
         {

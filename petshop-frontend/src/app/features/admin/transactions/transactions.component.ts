@@ -23,6 +23,29 @@ import { OrderService } from '../../../core/services/order.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ReviewService } from '../../../core/services/review.service';
 import { PaymentStatus, Transaction } from '../../../core/models/payment.models';
+
+interface CouponDto {
+  id: string;
+  code: string;
+  discountPercent: number;
+  isActive: boolean;
+  maxUses: number;
+  usedCount: number;
+  expiresAt?: string;
+  createdAt: string;
+}
+
+interface PendingReviewDto {
+  id: string;
+  productId: string;
+  productName: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  isApproved: boolean;
+}
 import { OrderStatus, Order } from '../../../core/models/order.models';
 
 @Component({
@@ -429,13 +452,13 @@ export default class TransactionsComponent implements OnInit, OnDestroy {
   selectedStatuses: Record<string, OrderStatus> = {};
 
   // Coupons
-  coupons: any[] = [];
+  coupons: CouponDto[] = [];
   couponsLoading = false;
   showCouponForm = false;
   newCoupon = { code: '', discountPercent: 10, maxUses: 100, expiresAt: null as Date | null };
 
   // Reviews Moderation
-  pendingReviews: any[] = [];
+  pendingReviews: PendingReviewDto[] = [];
   reviewsLoading = false;
 
   PaymentStatus = PaymentStatus;

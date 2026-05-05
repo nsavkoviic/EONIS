@@ -1,0 +1,10 @@
+.star-rating { display: flex; align-items: center; gap: 2px; }
+    .star-rating mat-icon { color: #d1d5db; transition: all 0.2s; user-select: none; }
+    .star-rating mat-icon.filled, .star-rating mat-icon.half { color: #f59e0b; }
+    
+    .sm mat-icon { font-size: 14px; width: 14px; height: 14px; }
+    .md mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    .lg mat-icon { font-size: 28px; width: 28px; height: 28px; }
+
+    .interactive mat-icon { cursor: pointer; }
+    .interactive mat-icon:hover { transform: scale(1.2); }

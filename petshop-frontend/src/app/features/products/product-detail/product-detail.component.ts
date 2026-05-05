@@ -133,12 +133,17 @@ import { StarRatingComponent } from '../../../shared/star-rating/star-rating.com
         <button class="submit-review-btn"
           (click)="submitReview()" [disabled]="isSubmittingReview">
           <mat-icon *ngIf="!isSubmittingReview">send</mat-icon>
-          <mat-spinner diameter="18" *ngIf="isSubmittingReview" style="display:inline-block"></mat-spinner>
-          {{ isSubmittingReview ? 'Submitting...' : 'Publish Review' }}
+          <span *ngIf="isSubmittingReview" style="display:inline-flex;align-items:center;gap:6px">⏳ Submitting...</span>
+          {{ isSubmittingReview ? '' : 'Publish Review' }}
         </button>
       </div>
 
-      <div class="already-reviewed" *ngIf="isLoggedIn && reviewSummary?.userHasReviewed && !reviewSummary?.userCanReview">
+      <div class="review-pending" *ngIf="reviewSubmittedPending">
+        <mat-icon>schedule</mat-icon>
+        Your review has been submitted and is pending admin approval. Thank you for your feedback!
+      </div>
+
+      <div class="already-reviewed" *ngIf="isLoggedIn && reviewSummary?.userHasReviewed && !reviewSummary?.userCanReview && !reviewSubmittedPending">
         <mat-icon>check_circle</mat-icon> You have already reviewed this product.
       </div>
 
@@ -226,6 +231,7 @@ import { StarRatingComponent } from '../../../shared/star-rating/star-rating.com
     .submit-review-btn:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(245,124,0,.45); }
     .submit-review-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
     .full-width { width: 100%; }
+    .review-pending { display:flex; align-items:center; gap:8px; color:#92400e; background:#fff3e0; padding:12px 16px; border-radius:10px; margin-bottom:16px; border:1px solid #fed7aa; }
     .already-reviewed { display:flex; align-items:center; gap:8px; color:#2e7d32; background:#f0fdf4; padding:12px 16px; border-radius:10px; margin-bottom:16px; }
     .review-card { background:white; border-radius:12px; border:1px solid #f0e6d3; padding:16px; margin-bottom:12px; }
     .review-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
@@ -256,7 +262,7 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
   isInWishlist = false;
   newReview = { rating: 0, comment: '' };
   isSubmittingReview = false;
-  reviewsLoading = false;
+  reviewSubmittedPending = false;
 
   get currentUserId(): string | null { return this.authSvc.currentUser$.value?.id ?? null; }
   get isAdmin(): boolean { return this.authSvc.currentUser$.value?.role === 'Admin'; }
@@ -355,7 +361,8 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
       next: () => {
         this.loadReviews();
         this.newReview = { rating: 0, comment: '' };
-        this.notify.showSuccess('Review submitted!');
+        this.reviewSubmittedPending = true;
+        this.notify.showSuccess('Review submitted and pending approval!');
         this.isSubmittingReview = false;
       },
       error: (err) => {

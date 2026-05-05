@@ -215,7 +215,6 @@ export default class ProductManagementComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   totalCount = 0;
   isLoading = false;
-  isSaving  = false;
   filter: ProductFilter = { page: 1, pageSize: 10 };
   searchCtrl = new FormControl('');
 
@@ -260,7 +259,6 @@ export default class ProductManagementComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return;
-      this.isSaving = true;
       const obs = product
         ? this.productSvc.update(product.id, result)
         : this.productSvc.create(result);
@@ -268,9 +266,8 @@ export default class ProductManagementComponent implements OnInit, OnDestroy {
         next: () => {
           this.notify.showSuccess('Product saved!');
           this.loadProducts();
-          this.isSaving = false;
         },
-        error: () => this.isSaving = false,
+        error: () => {}
       });
     });
   }

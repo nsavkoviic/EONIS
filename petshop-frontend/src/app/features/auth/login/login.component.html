@@ -1,0 +1,40 @@
+<div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-logo">🐾</div>
+        <h2 class="auth-title">Welcome Back</h2>
+        <p class="auth-subtitle">Sign in to your PetShop account</p>
+        
+        <div>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline" class="full-width field-group">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email"
+                autocomplete="email"
+                (blur)="form.get('email')?.markAsTouched()">
+              <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
+              <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email format</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width field-group">
+              <mat-label>Password</mat-label>
+              <input matInput [type]="showPwd ? 'text' : 'password'"
+                formControlName="password" autocomplete="current-password"
+                (blur)="form.get('password')?.markAsTouched()">
+              <button type="button" mat-icon-button matSuffix (click)="showPwd = !showPwd">
+                <mat-icon>{{ showPwd ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error *ngIf="form.get('password')?.hasError('required')">Password is required</mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit"
+              class="full-width submit-btn" [disabled]="isLoading">
+              <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+              <span *ngIf="!isLoading">Sign In</span>
+            </button>
+          </form>
+        </div>
+        <div class="auth-footer">
+          <p>Don't have an account? <a routerLink="/auth/register">Register</a></p>
+        </div>
+      </div>
+    </div>
