@@ -1,11 +1,11 @@
-    <h1 class="page-title-warm">📦 My Orders</h1>
+    <h1 class="page-title-warm">📦 {{ 'ORDERS.TITLE' | translate }}</h1>
     <div class="spinner-wrap" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
 
     <!-- Empty state -->
     <div class="empty-state" *ngIf="!isLoading && orders.length === 0">
       <mat-icon class="big-icon">receipt_long</mat-icon>
-      <h3>No orders yet</h3>
-      <a mat-raised-button color="primary" routerLink="/products">Start Shopping</a>
+      <h3>{{ 'ORDERS.NO_ORDERS' | translate }}</h3>
+      <a mat-raised-button color="primary" routerLink="/products">{{ 'ORDERS.START_SHOPPING' | translate }}</a>
     </div>
 
     <!-- Orders -->
@@ -20,7 +20,7 @@
           <mat-panel-description class="panel-desc">
             <span class="order-total">{{ order.totalAmount | currency:'EUR' }}</span>
             <span class="status-chip" [ngClass]="getStatusClass(order.status)">
-              {{ getStatusLabel(order.status) }}
+              {{ ('ORDERS.STATUS_' + getStatusLabel(order.status).toUpperCase()) | translate }}
             </span>
           </mat-panel-description>
         </mat-expansion-panel-header>
@@ -33,7 +33,7 @@
 
           <ng-container *ngIf="expandedOrders[order.id] as full">
             <div class="review-hint" *ngIf="isEligibleForReview(order.status)">
-              ⭐ You can now rate the products from this order!
+              ⭐ {{ 'ORDERS.REVIEW_HINT' | translate }}
             </div>
 
             <!-- Timeline -->
@@ -43,14 +43,14 @@
                 <div class="step-icon">
                   <mat-icon>{{ step.icon }}</mat-icon>
                 </div>
-                <div class="step-label">{{ step.label }}</div>
+                <div class="step-label">{{ { 'Ordered': 'ORDERS.STATUS_PENDING', 'Processing': 'ORDERS.STATUS_PROCESSING', 'Shipped': 'ORDERS.STATUS_SHIPPED', 'Delivered': 'ORDERS.STATUS_DELIVERED' }[step.label]! | translate }}</div>
               </div>
             </div>
 
             <!-- Items table -->
             <table class="items-table">
               <thead>
-                <tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr>
+                <tr><th>{{ 'ORDERS.COL_PRODUCT' | translate }}</th><th>{{ 'ORDERS.COL_QTY' | translate }}</th><th>{{ 'ORDERS.COL_PRICE' | translate }}</th><th>{{ 'ORDERS.COL_TOTAL' | translate }}</th><th></th></tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of full.items">
@@ -66,7 +66,7 @@
                       [fragment]="'reviews'"
                       *ngIf="isEligibleForReview(order.status)"
                       class="review-btn" style="font-size:.75rem; height:28px; line-height:28px;">
-                      <mat-icon style="font-size:14px">star</mat-icon> Rate
+                      <mat-icon style="font-size:14px">star</mat-icon> {{ 'ORDERS.RATE' | translate }}
                     </a>
                   </td>
                 </tr>
@@ -78,11 +78,11 @@
             <div class="detail-meta">
               <p *ngIf="full.shippingAddress">
                 <mat-icon class="meta-icon">local_shipping</mat-icon>
-                <strong>Shipping:</strong> {{ full.shippingAddress }}
+                <strong>{{ 'ORDERS.SHIPPING' | translate }}:</strong> {{ full.shippingAddress }}
               </p>
               <p *ngIf="full.stripePaymentIntentId">
                 <mat-icon class="meta-icon">payment</mat-icon>
-                <strong>Payment:</strong>
+                <strong>{{ 'ORDERS.PAYMENT' | translate }}:</strong>
                 <code [matTooltip]="full.stripePaymentIntentId!">
                   {{ full.stripePaymentIntentId!.slice(0, 24) }}...
                 </code>

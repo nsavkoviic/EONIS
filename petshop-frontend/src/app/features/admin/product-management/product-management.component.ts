@@ -20,39 +20,40 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ProductService } from '../../../core/services/product.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Product, ProductFilter } from '../../../core/models/product.models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-dialog',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule,
     MatInputModule, MatSelectModule, MatButtonModule, MatSlideToggleModule,
-    MatDividerModule, MatIconModule],
+    MatDividerModule, MatIconModule, TranslateModule],
   template: `
-    <h2 mat-dialog-title>{{ data.editMode ? 'Edit Product' : 'Add New Product' }}</h2>
+    <h2 mat-dialog-title>{{ data.editMode ? ('ADMIN.EDIT_PRODUCT' | translate) : ('ADMIN.ADD_PRODUCT' | translate) }}</h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="product-form">
         <mat-form-field appearance="outline" class="full-w">
-          <mat-label>Name</mat-label>
+          <mat-label>{{ 'ADMIN.NAME' | translate }}</mat-label>
           <input matInput formControlName="name">
           <mat-error>Required</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-w">
-          <mat-label>Description</mat-label>
+          <mat-label>{{ 'ADMIN.DESCRIPTION' | translate }}</mat-label>
           <textarea matInput formControlName="description" rows="3"></textarea>
           <mat-error>Required</mat-error>
         </mat-form-field>
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Price (EUR)</mat-label>
+            <mat-label>{{ 'ADMIN.PRICE' | translate }}</mat-label>
             <input matInput type="number" formControlName="price" min="0.01" step="0.01">
             <mat-error>Min €0.01</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Stock</mat-label>
+            <mat-label>{{ 'ADMIN.STOCK' | translate }}</mat-label>
             <input matInput type="number" formControlName="stockQuantity" min="0">
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Category</mat-label>
+            <mat-label>{{ 'ADMIN.CATEGORY' | translate }}</mat-label>
             <mat-select formControlName="category">
               <mat-option *ngFor="let c of categoryOptions" [value]="c.value">
                 {{ c.label }}
@@ -61,18 +62,18 @@ import { Product, ProductFilter } from '../../../core/models/product.models';
           </mat-form-field>
         </div>
         <mat-form-field appearance="outline" class="full-w">
-          <mat-label>Image URL (optional)</mat-label>
+          <mat-label>{{ 'ADMIN.IMAGE_URL' | translate }}</mat-label>
           <input matInput formControlName="imageUrl">
         </mat-form-field>
         <mat-slide-toggle formControlName="isAvailable" color="primary">
-          Available for sale
+          {{ 'ADMIN.AVAILABLE' | translate }}
         </mat-slide-toggle>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-button mat-dialog-close>{{ 'ADMIN.CANCEL' | translate }}</button>
       <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
-        <mat-icon>save</mat-icon> Save
+        <mat-icon>save</mat-icon> {{ 'ADMIN.SAVE' | translate }}
       </button>
     </mat-dialog-actions>
   `,
@@ -116,7 +117,7 @@ export class ProductDialogComponent {
     MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule,
     MatInputModule, MatSelectModule, MatProgressSpinnerModule,
     MatCardModule, MatChipsModule, MatPaginatorModule, MatTooltipModule,
-    MatSlideToggleModule, MatDividerModule, MatDialogModule, ProductDialogComponent],
+    MatSlideToggleModule, MatDividerModule, MatDialogModule, ProductDialogComponent, TranslateModule],
   templateUrl: './product-management.component.html',
   styleUrls: ['./product-management.component.scss']
 })

@@ -8,13 +8,14 @@ import { Subject, takeUntil } from 'rxjs';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { CartService } from '../../core/services/cart.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { WishlistItem } from '../../core/models/wishlist.models';
 
 @Component({
   selector: 'app-wishlist',
   standalone: true,
   imports: [CommonModule, CurrencyPipe, RouterLink,
-    MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+    MatButtonModule, MatIconModule, MatProgressSpinnerModule, TranslateModule],
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.scss']
 })

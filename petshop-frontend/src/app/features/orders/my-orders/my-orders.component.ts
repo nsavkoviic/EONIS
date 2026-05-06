@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrderService } from '../../../core/services/order.service';
 import { OrderStatus, OrderSummary, Order } from '../../../core/models/order.models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-orders',
@@ -20,7 +21,7 @@ import { OrderStatus, OrderSummary, Order } from '../../../core/models/order.mod
   imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink,
     MatCardModule, MatButtonModule, MatIconModule, MatChipsModule,
     MatProgressSpinnerModule, MatExpansionModule, MatDividerModule,
-    MatTableModule, MatTooltipModule],
+    MatTableModule, MatTooltipModule, TranslateModule],
   templateUrl: './my-orders.component.html',
   styleUrls: ['./my-orders.component.scss']
 })

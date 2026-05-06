@@ -1,12 +1,12 @@
-    <h1 class="page-title-warm">🛒 Your Shopping Cart</h1>
+    <h1 class="page-title-warm">🛒 {{ 'CART.TITLE' | translate }}</h1>
 
     <div class="spinner-wrap" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
 
     <!-- Empty -->
     <div class="empty-state" *ngIf="!isLoading && (!cart || cart.items.length === 0)">
       <mat-icon class="big-icon">shopping_cart</mat-icon>
-      <h3>Your cart is empty</h3>
-      <a mat-raised-button color="primary" routerLink="/products">Continue Shopping</a>
+      <h3>{{ 'CART.EMPTY' | translate }}</h3>
+      <a mat-raised-button color="primary" routerLink="/products">{{ 'CART.BROWSE_BTN' | translate }}</a>
     </div>
 
     <!-- Cart content -->
@@ -57,16 +57,16 @@
             </div>
             <mat-divider class="divider"></mat-divider>
             <div class="summary-row total-row">
-              <strong>Total</strong>
+              <strong>{{ 'CART.TOTAL' | translate }}</strong>
               <strong>{{ cart.totalPrice | currency:'EUR' }}</strong>
             </div>
           </mat-card-content>
           <mat-card-actions>
             <button mat-raised-button color="primary" class="checkout-btn"
               (click)="checkout()">
-              <mat-icon>payment</mat-icon> Proceed to Checkout
+              <mat-icon>payment</mat-icon> {{ 'CART.CHECKOUT_BTN' | translate }}
             </button>
-            <a mat-button routerLink="/products" class="continue-btn">Continue Shopping</a>
+            <a mat-button routerLink="/products" class="continue-btn">{{ 'CART.BROWSE_BTN' | translate }}</a>
           </mat-card-actions>
         </mat-card>
       </div>

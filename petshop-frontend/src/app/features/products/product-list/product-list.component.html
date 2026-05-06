@@ -4,15 +4,15 @@
       <div class="search-wrapper">
         <mat-icon class="search-icon">search</mat-icon>
         <input class="search-input" [formControl]="searchCtrl" 
-          placeholder="Search products, brands...">
+          [placeholder]="'PRODUCTS.SEARCH_PLACEHOLDER' | translate">
       </div>
 
       <!-- Filters row -->
       <div class="filters-row">
         <mat-form-field appearance="outline" class="filter-chip-field">
-          <mat-label>Category</mat-label>
+          <mat-label>{{ 'PRODUCTS.CATEGORY' | translate }}</mat-label>
           <mat-select [(ngModel)]="selectedCategory" (ngModelChange)="onCategoryChange($event)">
-            <mat-option [value]="null">All Categories</mat-option>
+            <mat-option [value]="null">{{ 'PRODUCTS.ALL_CATEGORIES' | translate }}</mat-option>
             <mat-option *ngFor="let c of categoryOptions" [value]="c.value">
               {{ c.emoji }} {{ c.label }}
             </mat-option>
@@ -20,7 +20,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="filter-chip-field">
-          <mat-label>Sort By</mat-label>
+          <mat-label>{{ 'PRODUCTS.SORT_BY' | translate }}</mat-label>
           <mat-select [(ngModel)]="selectedSort" (ngModelChange)="onSortChange($event)">
             <mat-option *ngFor="let s of sortOptions" [value]="s.value">{{ s.label }}</mat-option>
           </mat-select>
@@ -28,11 +28,11 @@
 
         <button class="avail-toggle" [class.active]="onlyAvailable" (click)="toggleAvailable()">
           <mat-icon>{{ onlyAvailable ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
-          In Stock Only
+          {{ 'PRODUCTS.IN_STOCK_ONLY' | translate }}
         </button>
 
         <button class="clear-btn" (click)="clearFilters()" *ngIf="hasActiveFilters()">
-          <mat-icon>close</mat-icon> Clear
+          <mat-icon>close</mat-icon> {{ 'PRODUCTS.CLEAR' | translate }}
         </button>
       </div>
     </div>
@@ -57,8 +57,8 @@
     <!-- Empty State -->
     <div class="empty-state" *ngIf="!isLoading && (response?.items?.length ?? 0) === 0">
       <mat-icon class="empty-icon">search_off</mat-icon>
-      <h3>No products found</h3>
-      <p>Try adjusting your search or filters.</p>
+      <h3>{{ 'PRODUCTS.NO_PRODUCTS' | translate }}</h3>
+      <p>{{ 'PRODUCTS.NO_PRODUCTS_DESC' | translate }}</p>
     </div>
 
     <!-- Grid -->
@@ -68,7 +68,7 @@
         <div class="img-wrapper">
           <img [src]="p.imageUrl || 'https://placehold.co/400x200?text=No+Image'"
             [alt]="p.name" class="product-img">
-          <span class="recommended-badge" *ngIf="isRecommended(p.category)">⭐ For You</span>
+          <span class="recommended-badge" *ngIf="isRecommended(p.category)">⭐ {{ 'PRODUCTS.FOR_YOU' | translate }}</span>
           <span class="category-chip-abs">{{ getCategoryLabel(p.category) }}</span>
         </div>
         <div class="card-body">
@@ -81,7 +81,7 @@
           <div class="price-row">
             <span class="price">{{ p.price | currency:'EUR' }}</span>
             <span class="stock-badge" [class.in-stock]="p.isAvailable" [class.out-stock]="!p.isAvailable">
-              {{ p.isAvailable ? 'In Stock' : 'Out of Stock' }}
+              {{ p.isAvailable ? ('PRODUCTS.IN_STOCK' | translate) : ('PRODUCTS.OUT_OF_STOCK' | translate) }}
             </span>
           </div>
         </div>
@@ -89,16 +89,16 @@
           <button mat-icon-button class="wishlist-card-btn"
             [class.wishlisted]="wishlistIds.has(p.id)"
             (click)="toggleWishlist($event, p)"
-            [matTooltip]="wishlistIds.has(p.id) ? 'Remove from wishlist' : 'Add to wishlist'">
+            [matTooltip]="wishlistIds.has(p.id) ? ('PRODUCTS.REMOVE_WISHLIST' | translate) : ('PRODUCTS.ADD_WISHLIST' | translate)">
             <mat-icon>{{ wishlistIds.has(p.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
           </button>
           <button mat-raised-button color="primary"
             [disabled]="!p.isAvailable || !isLoggedIn"
             (click)="addToCartFromCard($event, p)"
             class="cart-card-btn"
-            matTooltip="Add to cart">
+            [matTooltip]="'PRODUCTS.ADD_TO_CART' | translate">
             <mat-icon>add_shopping_cart</mat-icon>
-            Add to Cart
+            {{ 'PRODUCTS.ADD_TO_CART' | translate }}
           </button>
         </div>
       </div>

@@ -2,20 +2,14 @@
     <section class="hero">
       <div class="hero-content">
         <div class="hero-badge">🐾 Trusted by 10,000+ pet owners</div>
-        <h1 class="hero-title">
-          Everything Your<br>
-          <span class="hero-highlight">Pet Deserves</span>
-        </h1>
-        <p class="hero-subtitle">
-          Premium food, toys and accessories for dogs, cats, birds and more.
-          Delivered with love to your door.
-        </p>
+        <h1 class="hero-title">{{ 'HOME.HERO_TITLE' | translate }}</h1>
+        <p class="hero-subtitle">{{ 'HOME.HERO_SUBTITLE' | translate }}</p>
         <div class="hero-actions">
           <a mat-raised-button color="primary" routerLink="/products" class="hero-cta">
-            <mat-icon>shopping_bag</mat-icon> Shop Now
+            <mat-icon>shopping_bag</mat-icon> {{ 'HOME.HERO_BTN_SHOP' | translate }}
           </a>
           <a mat-stroked-button routerLink="/auth/register" class="hero-cta-secondary">
-            Join Free →
+            {{ 'HOME.HERO_BTN_AI' | translate }}
           </a>
         </div>
         <div class="hero-stats">
@@ -46,8 +40,8 @@
           [routerLink]="f.route">
           <div class="feature-icon">{{ f.icon }}</div>
           <div class="feature-content">
-            <h3>{{ f.title }}</h3>
-            <p>{{ f.text }}</p>
+            <h3>{{ { 'Free Delivery': 'HOME.FEATURE_3_TITLE', 'Premium Quality': 'HOME.FEATURE_2_TITLE', 'Secure Payments': 'HOME.FEATURE_4_TITLE', 'AI Pet Assistant': 'HOME.FEATURE_1_TITLE' }[f.title]! | translate }}</h3>
+            <p>{{ { 'Free Delivery': 'HOME.FEATURE_3_DESC', 'Premium Quality': 'HOME.FEATURE_2_DESC', 'Secure Payments': 'HOME.FEATURE_4_DESC', 'AI Pet Assistant': 'HOME.FEATURE_1_DESC' }[f.title]! | translate }}</p>
             <span class="feature-link" *ngIf="f.route">Try it now →</span>
           </div>
         </div>
@@ -57,14 +51,14 @@
     <!-- CATEGORIES -->
     <section class="categories-section">
       <div class="section-header">
-        <h2>Shop by Category</h2>
+        <h2>{{ 'HOME.CATEGORIES_TITLE' | translate }}</h2>
         <p>Find exactly what your pet needs</p>
       </div>
       <div class="categories-grid">
         <button *ngFor="let c of categories"
           class="category-card" (click)="goToCategory(c.value)">
           <span class="cat-emoji">{{ c.icon }}</span>
-          <span class="cat-label">{{ c.label }}</span>
+          <span class="cat-label">{{ { 'Dogs': 'HOME.CATEGORY_DOGS', 'Cats': 'HOME.CATEGORY_CATS', 'Birds': 'HOME.CATEGORY_BIRDS', 'Fish': 'HOME.CATEGORY_FISH', 'Reptiles': 'HOME.CATEGORY_REPTILES', 'Small Animals': 'HOME.CATEGORY_SMALL_ANIMALS' }[c.label]! | translate }}</span>
           <mat-icon class="cat-arrow">arrow_forward</mat-icon>
         </button>
       </div>
@@ -73,10 +67,10 @@
     <!-- CTA BANNER -->
     <section class="cta-banner">
       <div class="cta-content">
-        <h2>🎉 First time here?</h2>
-        <p>Use code <strong>WELCOME10</strong> for 10% off your first order</p>
+        <h2>🎉 {{ 'HOME.CTA_TITLE' | translate }}</h2>
+        <p>{{ 'HOME.DISCOUNT_BANNER' | translate }}</p>
         <a mat-raised-button routerLink="/auth/register" class="cta-btn">
-          Create Account &amp; Save
+          {{ 'HOME.CTA_BTN' | translate }}
         </a>
       </div>
     </section>

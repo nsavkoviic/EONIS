@@ -23,13 +23,14 @@ import { Product } from '../../core/models/product.models';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, CurrencyPipe, FormsModule, ReactiveFormsModule, RouterLink,
     MatCardModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
-    MatSelectModule, MatChipsModule, MatDividerModule, MatProgressSpinnerModule, MatTooltipModule],
+    MatSelectModule, MatChipsModule, MatDividerModule, MatProgressSpinnerModule, MatTooltipModule, TranslateModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })

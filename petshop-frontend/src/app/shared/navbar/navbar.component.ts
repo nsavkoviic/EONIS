@@ -13,12 +13,14 @@ import { CartService } from '../../core/services/cart.service';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, AsyncPipe, RouterLink, RouterLinkActive,
-    MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule, MatMenuModule, MatTooltipModule, MatDividerModule],
+    MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule, MatMenuModule, MatTooltipModule, MatDividerModule, TranslateModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
@@ -26,8 +28,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   wishlistCount: number = 0;
   menuOpen = false;
   private destroy$ = new Subject<void>();
+  currentLang$ = this.langService.currentLang$;
 
-  constructor(public auth: AuthService, public cart: CartService, public wishlistSvc: WishlistService, private router: Router) { }
+  constructor(
+    public auth: AuthService, 
+    public cart: CartService, 
+    public wishlistSvc: WishlistService, 
+    private router: Router,
+    public langService: LanguageService
+  ) { }
 
   ngOnInit(): void {
     this.auth.currentUser$
@@ -51,5 +60,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/home']);
+  }
+
+  switchLang(lang: 'en' | 'sr'): void {
+    this.langService.switchLanguage(lang);
   }
 }

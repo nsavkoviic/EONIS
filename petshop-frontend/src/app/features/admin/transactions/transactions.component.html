@@ -1,4 +1,4 @@
-    <h1>Transactions &amp; Orders</h1>
+    <h1>{{ 'ADMIN.TRANSACTIONS_TITLE' | translate }}</h1>
 
     <!-- ── Summary Cards ─────────────────────────────────────────────────── -->
     <div class="summary-grid">
@@ -29,7 +29,7 @@
     <mat-tab-group animationDuration="200ms" (selectedTabChange)="onTabChange($event)">
 
       <!-- Tab 1: Transactions -->
-      <mat-tab label="💳 Transactions">
+      <mat-tab [label]="'💳 ' + ('ADMIN.TAB_TRANSACTIONS' | translate)">
         <div class="tab-content">
           <form [formGroup]="filterForm" class="filter-bar">
             <mat-form-field appearance="outline">
@@ -111,7 +111,7 @@
       </mat-tab>
 
       <!-- Tab 2: Order Management -->
-      <mat-tab label="📦 Order Management">
+      <mat-tab [label]="'📦 ' + ('ADMIN.TAB_ORDERS' | translate)">
         <div class="tab-content">
           <div class="filter-bar">
             <mat-form-field appearance="outline" class="status-filter">
@@ -176,7 +176,7 @@
       </mat-tab>
 
       <!-- Tab 3: Coupon Management -->
-      <mat-tab label="🎟️ Coupons">
+      <mat-tab [label]="'🎟️ ' + ('ADMIN.TAB_COUPONS' | translate)">
         <div class="tab-content">
           <div class="coupon-header">
             <button mat-raised-button color="primary" (click)="showCouponForm = !showCouponForm">
@@ -275,7 +275,7 @@
       </mat-tab>
 
       <!-- Tab 4: Reviews Moderation -->
-      <mat-tab label="⭐ Reviews">
+      <mat-tab [label]="'⭐ ' + ('ADMIN.TAB_REVIEWS' | translate)">
         <div class="tab-content">
           <div class="tab-header-info" *ngIf="pendingReviews.length > 0">
             {{ pendingReviews.length }} review(s) awaiting approval
@@ -285,7 +285,7 @@
 
           <div class="empty-state" *ngIf="!reviewsLoading && pendingReviews.length === 0">
             <mat-icon class="big-icon">rate_review</mat-icon>
-            <p>No reviews pending approval</p>
+            <p>{{ 'ADMIN.NO_PENDING' | translate }}</p>
           </div>
 
           <div class="review-moderation-list" *ngIf="!reviewsLoading && pendingReviews.length > 0">
@@ -306,10 +306,10 @@
               <p class="mod-comment">{{ r.comment }}</p>
               <div class="mod-actions">
                 <button mat-raised-button color="primary" (click)="approveReview(r)">
-                  <mat-icon>check</mat-icon> Approve
+                  <mat-icon>check</mat-icon> {{ 'ADMIN.APPROVE' | translate }}
                 </button>
                 <button mat-stroked-button color="warn" (click)="deleteReview(r)">
-                  <mat-icon>delete</mat-icon> Reject
+                  <mat-icon>delete</mat-icon> {{ 'ADMIN.REJECT' | translate }}
                 </button>
               </div>
             </mat-card>

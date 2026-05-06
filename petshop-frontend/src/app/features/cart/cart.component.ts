@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CartService } from '../../core/services/cart.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { Cart, CartItem } from '../../core/models/cart.models';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +21,7 @@ import { takeUntil } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, CurrencyPipe, FormsModule, RouterLink,
     MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule,
-    MatDividerModule, MatInputModule, MatFormFieldModule],
+    MatDividerModule, MatInputModule, MatFormFieldModule, TranslateModule],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })

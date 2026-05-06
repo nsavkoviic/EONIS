@@ -24,6 +24,7 @@ import { UserService } from '../../../core/services/user.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Product, ProductFilter, PagedResponse } from '../../../core/models/product.models';
 import { StarRatingComponent } from '../../../shared/star-rating/star-rating.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-list',
@@ -31,7 +32,7 @@ import { StarRatingComponent } from '../../../shared/star-rating/star-rating.com
   imports: [CommonModule, CurrencyPipe, FormsModule, ReactiveFormsModule, RouterLink,
     MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule,
     MatSelectModule, MatPaginatorModule,
-    MatChipsModule, MatIconModule, MatBadgeModule, MatTooltipModule, StarRatingComponent],
+    MatChipsModule, MatIconModule, MatBadgeModule, MatTooltipModule, StarRatingComponent, TranslateModule],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
 })

@@ -1,20 +1,20 @@
 <div class="auth-page">
       <div class="auth-card">
         <div class="auth-logo">🐾</div>
-        <h2 class="auth-title">Create Account</h2>
-        <p class="auth-subtitle">Join PetShop today</p>
+        <h2 class="auth-title">{{ 'AUTH.REGISTER_TITLE' | translate }}</h2>
+        <p class="auth-subtitle">{{ 'AUTH.REGISTER_SUBTITLE' | translate }}</p>
         
         <div>
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row-2">
               <mat-form-field appearance="outline" class="field-group">
-                <mat-label>First Name</mat-label>
+                <mat-label>{{ 'AUTH.FIRST_NAME' | translate }}</mat-label>
                 <input matInput formControlName="firstName"
                   (blur)="form.get('firstName')?.markAsTouched()">
                 <mat-error *ngIf="form.get('firstName')?.hasError('required')">First name is required</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="field-group">
-                <mat-label>Last Name</mat-label>
+                <mat-label>{{ 'AUTH.LAST_NAME' | translate }}</mat-label>
                 <input matInput formControlName="lastName"
                   (blur)="form.get('lastName')?.markAsTouched()">
                 <mat-error *ngIf="form.get('lastName')?.hasError('required')">Last name is required</mat-error>
@@ -22,7 +22,7 @@
             </div>
 
             <mat-form-field appearance="outline" class="full-width field-group">
-              <mat-label>Email</mat-label>
+              <mat-label>{{ 'AUTH.EMAIL' | translate }}</mat-label>
               <input matInput type="email" formControlName="email"
                 (blur)="form.get('email')?.markAsTouched()">
               <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
@@ -30,7 +30,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width field-group">
-              <mat-label>Password</mat-label>
+              <mat-label>{{ 'AUTH.PASSWORD' | translate }}</mat-label>
               <input matInput [type]="showPwd ? 'text' : 'password'" formControlName="password"
                 (blur)="form.get('password')?.markAsTouched()">
               <button type="button" mat-icon-button matSuffix (click)="showPwd = !showPwd">
@@ -42,7 +42,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width field-group">
-              <mat-label>Confirm Password</mat-label>
+              <mat-label>{{ 'AUTH.CONFIRM_PASSWORD' | translate }}</mat-label>
               <input matInput [type]="showPwd ? 'text' : 'password'" formControlName="confirmPassword"
                 (blur)="form.get('confirmPassword')?.markAsTouched()">
               <mat-error *ngIf="form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched">
@@ -63,12 +63,12 @@
             <button mat-raised-button color="primary" type="submit"
               class="full-width submit-btn" [disabled]="isLoading">
               <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-              <span *ngIf="!isLoading">Create Account</span>
+              <span *ngIf="!isLoading">{{ 'AUTH.REGISTER_BTN' | translate }}</span>
             </button>
           </form>
         </div>
         <div class="auth-footer">
-          <p>Already have an account? <a routerLink="/auth/login">Sign in</a></p>
+          <p>{{ 'AUTH.HAS_ACCOUNT' | translate }} <a routerLink="/auth/login">{{ 'AUTH.LOGIN_LINK' | translate }}</a></p>
         </div>
       </div>
     </div>

@@ -18,6 +18,7 @@ import { UserService } from '../../core/services/user.service';
 import { Cart } from '../../core/models/cart.models';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface ShippingOption {
   id: string; name: string; logo: string;
@@ -29,7 +30,7 @@ interface ShippingOption {
   standalone: true,
   imports: [CommonModule, CurrencyPipe, FormsModule, ReactiveFormsModule,
     MatCardModule, MatButtonModule, MatIconModule, MatFormFieldModule,
-    MatInputModule, MatStepperModule, MatProgressSpinnerModule, MatDividerModule],
+    MatInputModule, MatStepperModule, MatProgressSpinnerModule, MatDividerModule, TranslateModule],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss']
 })

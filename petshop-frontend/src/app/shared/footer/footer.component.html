@@ -8,8 +8,7 @@
             <span class="logo-text">PetShop</span>
           </a>
           <p class="footer-tagline">
-            Premium products for your beloved pets.
-            Delivered with love.
+            {{ 'FOOTER.TAGLINE' | translate }}
           </p>
           <div class="footer-social">
             <a href="#" class="social-btn" aria-label="Facebook">
@@ -34,32 +33,32 @@
 
         <!-- Quick Links -->
         <div class="footer-col">
-          <h4 class="footer-heading">Quick Links</h4>
+          <h4 class="footer-heading">{{ 'FOOTER.ACCOUNT' | translate }}</h4>
           <nav class="footer-nav">
-            <a routerLink="/home" class="footer-link">Home</a>
-            <a routerLink="/products" class="footer-link">Products</a>
-            <a routerLink="/cart" class="footer-link">Shopping Cart</a>
-            <a routerLink="/orders" class="footer-link">My Orders</a>
-            <a routerLink="/wishlist" class="footer-link">Wishlist</a>
-            <a routerLink="/ai-assistant" class="footer-link">🤖 AI Assistant</a>
+            <a routerLink="/home" class="footer-link">{{ 'NAV.HOME' | translate }}</a>
+            <a routerLink="/products" class="footer-link">{{ 'FOOTER.ALL_PRODUCTS' | translate }}</a>
+            <a routerLink="/cart" class="footer-link">{{ 'NAV.CART' | translate }}</a>
+            <a routerLink="/orders" class="footer-link">{{ 'FOOTER.MY_ORDERS' | translate }}</a>
+            <a routerLink="/wishlist" class="footer-link">{{ 'FOOTER.WISHLIST' | translate }}</a>
+            <a routerLink="/ai-assistant" class="footer-link">🤖 {{ 'NAV.AI_ASSISTANT' | translate }}</a>
           </nav>
         </div>
 
         <!-- Categories -->
         <div class="footer-col">
-          <h4 class="footer-heading">Categories</h4>
+          <h4 class="footer-heading">{{ 'FOOTER.SHOP' | translate }}</h4>
           <nav class="footer-nav">
-            <a routerLink="/products" [queryParams]="{category: 0}" class="footer-link">🐕 Dogs</a>
-            <a routerLink="/products" [queryParams]="{category: 1}" class="footer-link">🐈 Cats</a>
-            <a routerLink="/products" [queryParams]="{category: 2}" class="footer-link">🐦 Birds</a>
-            <a routerLink="/products" [queryParams]="{category: 3}" class="footer-link">🐠 Fish</a>
-            <a routerLink="/products" [queryParams]="{category: 5}" class="footer-link">🐹 Small Animals</a>
+            <a routerLink="/products" [queryParams]="{category: 0}" class="footer-link">🐕 {{ 'FOOTER.DOGS' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 1}" class="footer-link">🐈 {{ 'FOOTER.CATS' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 2}" class="footer-link">🐦 {{ 'FOOTER.BIRDS' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 3}" class="footer-link">🐠 {{ 'HOME.CATEGORY_FISH' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 5}" class="footer-link">🐹 {{ 'HOME.CATEGORY_SMALL_ANIMALS' | translate }}</a>
           </nav>
         </div>
 
         <!-- Customer Service -->
         <div class="footer-col">
-          <h4 class="footer-heading">Customer Service</h4>
+          <h4 class="footer-heading">{{ 'FOOTER.CONTACT' | translate }}</h4>
           <nav class="footer-nav">
             <span class="footer-info">📧 support&#64;petshop.com</span>
             <span class="footer-info">📞 +381 11 123 4567</span>
@@ -76,7 +75,7 @@
       <!-- Bottom bar -->
       <div class="footer-bottom">
         <div class="footer-bottom-inner">
-          <span>© {{ year }} PetShop EONIS. All rights reserved.</span>
+          <span>© {{ year }} PetShop EONIS. {{ 'FOOTER.RIGHTS' | translate }}</span>
           <span>Made with ❤️ for pet lovers</span>
         </div>
       </div>

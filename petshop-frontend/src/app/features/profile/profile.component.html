@@ -11,42 +11,42 @@
 
       <!-- SECTION 1: Personal Info -->
       <mat-card class="section-card">
-        <mat-card-header><mat-card-title>👤 Personal Info</mat-card-title></mat-card-header>
+        <mat-card-header><mat-card-title>👤 {{ 'PROFILE.PERSONAL_INFO' | translate }}</mat-card-title></mat-card-header>
         <mat-card-content>
           <form [formGroup]="infoForm" class="info-form">
             <div class="form-row">
               <mat-form-field appearance="outline">
-                <mat-label>First Name</mat-label>
+                <mat-label>{{ 'PROFILE.FIRST_NAME' | translate }}</mat-label>
                 <input matInput formControlName="firstName">
               </mat-form-field>
               <mat-form-field appearance="outline">
-                <mat-label>Last Name</mat-label>
+                <mat-label>{{ 'PROFILE.LAST_NAME' | translate }}</mat-label>
                 <input matInput formControlName="lastName">
               </mat-form-field>
             </div>
             <mat-form-field appearance="outline" class="full-w">
-              <mat-label>Phone</mat-label>
+              <mat-label>{{ 'PROFILE.PHONE' | translate }}</mat-label>
               <input matInput formControlName="phoneNumber">
             </mat-form-field>
             <mat-form-field appearance="outline" class="full-w">
-              <mat-label>Address</mat-label>
+              <mat-label>{{ 'PROFILE.ADDRESS' | translate }}</mat-label>
               <input matInput formControlName="address">
             </mat-form-field>
           </form>
         </mat-card-content>
         <mat-card-actions align="end">
           <button mat-raised-button color="primary" (click)="savePersonal()" [disabled]="savingInfo">
-            <mat-icon>save</mat-icon> Save Changes
+            <mat-icon>save</mat-icon> {{ 'PROFILE.SAVE_BTN' | translate }}
           </button>
         </mat-card-actions>
       </mat-card>
 
       <!-- SECTION 2: Pets & Preferences -->
       <mat-card class="section-card">
-        <mat-card-header><mat-card-title>🐾 My Pets &amp; Preferences</mat-card-title></mat-card-header>
+        <mat-card-header><mat-card-title>🐾 {{ 'PROFILE.PET_PREFERENCES' | translate }}</mat-card-title></mat-card-header>
         <mat-card-content>
 
-          <h3 class="sub-label">Which animals do you have or love?</h3>
+          <h3 class="sub-label">{{ 'PROFILE.FAVORITE_ANIMALS' | translate }}</h3>
           <div class="animal-grid">
             <button *ngFor="let a of animalOptions" mat-stroked-button
               [class.selected]="favAnimals.includes(a.value)"
@@ -57,7 +57,7 @@
 
           <mat-divider style="margin:20px 0"></mat-divider>
 
-          <h3 class="sub-label">My Current Pets</h3>
+          <h3 class="sub-label">{{ 'PROFILE.CURRENT_PETS' | translate }}</h3>
           <div class="pet-list">
             <div class="pet-card" *ngFor="let pet of currentPets; let i = index">
               <span class="pet-emoji">{{ getEmoji(pet.animalType) }}</span>
@@ -79,19 +79,19 @@
               </mat-select>
             </mat-form-field>
             <mat-form-field appearance="outline" class="pet-field">
-              <mat-label>Name</mat-label>
+              <mat-label>{{ 'PROFILE.PET_NAME' | translate }}</mat-label>
               <input matInput [(ngModel)]="newPet.name">
             </mat-form-field>
             <mat-form-field appearance="outline" class="pet-field-sm">
-              <mat-label>Breed</mat-label>
+              <mat-label>{{ 'PROFILE.PET_BREED' | translate }}</mat-label>
               <input matInput [(ngModel)]="newPet.breed">
             </mat-form-field>
             <mat-form-field appearance="outline" class="pet-field-sm">
-              <mat-label>Age</mat-label>
+              <mat-label>{{ 'PROFILE.PET_AGE' | translate }}</mat-label>
               <input matInput type="number" [(ngModel)]="newPet.ageYears" min="0">
             </mat-form-field>
             <button mat-raised-button color="accent" (click)="addPet()" [disabled]="!newPet.name.trim()">
-              <mat-icon>add</mat-icon> Add
+              <mat-icon>add</mat-icon> {{ 'PROFILE.ADD_PET' | translate }}
             </button>
           </div>
         </mat-card-content>
@@ -99,7 +99,7 @@
 
       <!-- SECTION 3: Recommendations -->
       <mat-card class="section-card">
-        <mat-card-header><mat-card-title>🌟 Recommended for You</mat-card-title></mat-card-header>
+        <mat-card-header><mat-card-title>🌟 {{ 'PROFILE.RECOMMENDED' | translate }}</mat-card-title></mat-card-header>
         <mat-card-content>
           <div *ngIf="favAnimals.length === 0" class="reco-empty">
             Set your favorite animals above to see personalized recommendations!

@@ -17,6 +17,7 @@ import { NotificationService } from '../../core/services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Product } from '../../core/models/product.models';
 import { environment } from '../../../environments/environment';
+import { TranslateModule } from '@ngx-translate/core';
 interface ChatMessage { role: 'user' | 'assistant'; content: string; products?: RecommendedProduct[]; timestamp: Date; }
 interface RecommendedProduct { productId: string; quantity: number; reason: string; product?: Product; }
 interface PetInfo { name: string; species: string; breed: string; weightKg: number | null; ageYears: number | null; sex: string; problem: string; }
@@ -24,7 +25,7 @@ interface PetInfo { name: string; species: string; breed: string; weightKg: numb
 @Component({
   selector: 'app-ai-assistant',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, FormsModule, RouterLink, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatChipsModule, MatTooltipModule],
+  imports: [CommonModule, CurrencyPipe, FormsModule, RouterLink, MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatChipsModule, MatTooltipModule, TranslateModule],
   templateUrl: './ai-assistant.component.html',
   styleUrls: ['./ai-assistant.component.scss']
 })

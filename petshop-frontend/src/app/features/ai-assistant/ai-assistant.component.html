@@ -2,8 +2,8 @@
       <div class="ai-header">
         <div class="ai-header-icon">🤖</div>
         <div>
-          <h1 class="ai-title">Pet AI Assistant</h1>
-          <p class="ai-subtitle">Tell me about your pet and I'll recommend the perfect products from our store</p>
+          <h1 class="ai-title">{{ 'AI.TITLE' | translate }}</h1>
+          <p class="ai-subtitle">{{ 'AI.SUBTITLE' | translate }}</p>
         </div>
       </div>
 
@@ -12,23 +12,23 @@
         <h2 class="form-title">🐾 Tell me about your pet</h2>
         <p class="form-hint">The more details you provide, the better my recommendations will be!</p>
         <div class="form-grid">
-          <mat-form-field appearance="outline"><mat-label>Pet Name</mat-label><input matInput [(ngModel)]="petInfo.name" placeholder="e.g. Max"><mat-icon matSuffix>pets</mat-icon></mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Species</mat-label>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_NAME' | translate }}</mat-label><input matInput [(ngModel)]="petInfo.name" placeholder="e.g. Max"><mat-icon matSuffix>pets</mat-icon></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_TYPE' | translate }}</mat-label>
             <mat-select [(ngModel)]="petInfo.species">
               <mat-option value="dog">🐕 Dog</mat-option><mat-option value="cat">🐈 Cat</mat-option>
               <mat-option value="bird">🐦 Bird</mat-option><mat-option value="fish">🐠 Fish</mat-option>
               <mat-option value="reptile">🦎 Reptile</mat-option><mat-option value="small animal">🐹 Small Animal</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Breed (optional)</mat-label><input matInput [(ngModel)]="petInfo.breed" placeholder="e.g. Golden Retriever"></mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Sex</mat-label>
-            <mat-select [(ngModel)]="petInfo.sex"><mat-option value="male">Male</mat-option><mat-option value="female">Female</mat-option><mat-option value="unknown">Unknown</mat-option></mat-select>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_BREED' | translate }}</mat-label><input matInput [(ngModel)]="petInfo.breed" placeholder="e.g. Golden Retriever"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_GENDER' | translate }}</mat-label>
+            <mat-select [(ngModel)]="petInfo.sex"><mat-option value="male">{{ 'AI.MALE' | translate }}</mat-option><mat-option value="female">{{ 'AI.FEMALE' | translate }}</mat-option><mat-option value="unknown">Unknown</mat-option></mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Weight (kg)</mat-label><input matInput type="number" [(ngModel)]="petInfo.weightKg" placeholder="e.g. 25" min="0.1"></mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Age (years)</mat-label><input matInput type="number" [(ngModel)]="petInfo.ageYears" placeholder="e.g. 3" min="0"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_WEIGHT' | translate }}</mat-label><input matInput type="number" [(ngModel)]="petInfo.weightKg" placeholder="e.g. 25" min="0.1"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_AGE' | translate }}</mat-label><input matInput type="number" [(ngModel)]="petInfo.ageYears" placeholder="e.g. 3" min="0"></mat-form-field>
         </div>
-        <mat-form-field appearance="outline" class="full-width"><mat-label>What do you need help with?</mat-label>
-          <textarea matInput [(ngModel)]="petInfo.problem" rows="3" placeholder="e.g. My dog needs food for 3 months, also looking for a toy..."></textarea>
+        <mat-form-field appearance="outline" class="full-width"><mat-label>{{ 'AI.DESCRIPTION' | translate }}</mat-label>
+          <textarea matInput [(ngModel)]="petInfo.problem" rows="3" [placeholder]="'AI.DESCRIPTION_PLACEHOLDER' | translate"></textarea>
         </mat-form-field>
         <div class="quick-prompts"><span class="quick-label">Quick topics:</span>
           <button class="quick-chip" *ngFor="let q of quickPrompts" (click)="petInfo.problem = q">{{ q }}</button>
@@ -36,7 +36,7 @@
         <button class="start-btn" (click)="startChat()" [disabled]="!petInfo.species || !petInfo.problem.trim() || isLoading">
           <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
           <mat-icon *ngIf="!isLoading">auto_awesome</mat-icon>
-          {{ isLoading ? 'Analyzing...' : 'Get AI Recommendations' }}
+          {{ isLoading ? ('AI.THINKING' | translate) : ('AI.START_BTN' | translate) }}
         </button>
       </div>
 
@@ -65,7 +65,7 @@
             </div>
           </div>
           <div class="chat-input-row">
-            <input class="chat-input" [(ngModel)]="userInput" placeholder="Ask a follow-up question..." (keydown.enter)="sendMessage()" [disabled]="isLoading">
+            <input class="chat-input" [(ngModel)]="userInput" [placeholder]="'AI.CHAT_PLACEHOLDER' | translate" (keydown.enter)="sendMessage()" [disabled]="isLoading">
             <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput.trim() || isLoading"><mat-icon>send</mat-icon></button>
           </div>
         </div>
@@ -83,7 +83,7 @@
                 <div class="reco-footer">
                   <span class="reco-price">{{ reco.product?.price | currency:'EUR' }}</span>
                   <div class="reco-qty-row">
-                    <span class="qty-label">Qty:</span>
+                    <span class="qty-label">{{ 'AI.QUANTITY' | translate }}:</span>
                     <button class="qty-btn" (click)="changeQty(reco,-1)">−</button>
                     <span class="qty-val">{{ reco.quantity }}</span>
                     <button class="qty-btn" (click)="changeQty(reco,1)">+</button>

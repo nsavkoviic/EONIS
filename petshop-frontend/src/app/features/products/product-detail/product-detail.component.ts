@@ -22,6 +22,7 @@ import { WishlistService } from '../../../core/services/wishlist.service';
 import { Product } from '../../../core/models/product.models';
 import { ProductReviewSummary } from '../../../core/models/review.models';
 import { StarRatingComponent } from '../../../shared/star-rating/star-rating.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-detail',
@@ -29,7 +30,7 @@ import { StarRatingComponent } from '../../../shared/star-rating/star-rating.com
   imports: [CommonModule, CurrencyPipe, DatePipe, FormsModule, RouterLink,
     MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule,
     MatChipsModule, MatDividerModule, MatFormFieldModule,
-    MatInputModule, StarRatingComponent, AsyncPipe],
+    MatInputModule, StarRatingComponent, AsyncPipe, TranslateModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })

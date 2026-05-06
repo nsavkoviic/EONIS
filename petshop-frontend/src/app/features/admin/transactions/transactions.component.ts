@@ -47,6 +47,7 @@ interface PendingReviewDto {
   isApproved: boolean;
 }
 import { OrderStatus, Order } from '../../../core/models/order.models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-transactions',
@@ -56,7 +57,7 @@ import { OrderStatus, Order } from '../../../core/models/order.models';
     MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule,
     MatProgressSpinnerModule, MatCardModule, MatChipsModule, MatTooltipModule,
     MatTabsModule, MatDividerModule, MatPaginatorModule,
-    MatSlideToggleModule],
+    MatSlideToggleModule, TranslateModule],
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.scss']
 })
