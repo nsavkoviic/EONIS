@@ -1,0 +1,13 @@
+    .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    h1 { font-size:2rem; margin:0; }
+    .search-field { width:100%; margin-bottom:16px; }
+    .table-wrap { position:relative; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; margin-bottom:24px; }
+    .spinner-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.8); z-index:10; }
+    .full-table { width:100%; }
+    .thumb { width:48px; height:48px; object-fit:cover; border-radius:6px; }
+    .stock-num { font-weight:700; padding:2px 8px; border-radius:12px; }
+    .stock-zero { background:#ffebee; color:#c62828; }
+    .stock-low  { background:#fff3e0; color:#e65100; }
+    .stock-ok   { background:#e8f5e9; color:#2e7d32; }
+    .avail-chip { padding:3px 10px; border-radius:12px; font-size:.8rem; font-weight:600; }
+    .yes { background:#e8f5e9; color:#2e7d32; } .no { background:#ffebee; color:#c62828; }

@@ -76,12 +76,7 @@ import { Product, ProductFilter } from '../../../core/models/product.models';
       </button>
     </mat-dialog-actions>
   `,
-  styles: [`
-    .product-form { display:flex; flex-direction:column; gap:8px; padding:8px 0; min-width:500px; }
-    .form-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
-    .form-row mat-form-field { width:100%; }
-    .full-w { width:100%; }
-  `]
+  styles: [`.product-form { display:flex; flex-direction:column; gap:8px; padding:8px 0; min-width:500px; } .form-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; } .form-row mat-form-field { width:100%; } .full-w { width:100%; }`]
 })
 export class ProductDialogComponent {
   saving = false;
@@ -122,91 +117,8 @@ export class ProductDialogComponent {
     MatInputModule, MatSelectModule, MatProgressSpinnerModule,
     MatCardModule, MatChipsModule, MatPaginatorModule, MatTooltipModule,
     MatSlideToggleModule, MatDividerModule, MatDialogModule, ProductDialogComponent],
-  template: `
-    <div class="page-header">
-      <h1>Product Management</h1>
-      <button mat-raised-button color="primary" (click)="openForm()">
-        <mat-icon>add</mat-icon> Add Product
-      </button>
-    </div>
-
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Search products...</mat-label>
-      <input matInput [formControl]="searchCtrl">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-
-    <div class="table-wrap">
-      <div class="spinner-overlay" *ngIf="isLoading">
-        <mat-spinner diameter="48"></mat-spinner>
-      </div>
-      <table mat-table [dataSource]="products" class="full-table">
-        <ng-container matColumnDef="image">
-          <th mat-header-cell *matHeaderCellDef>Image</th>
-          <td mat-cell *matCellDef="let p">
-            <img [src]="p.imageUrl || 'https://placehold.co/48x48?text=?'" class="thumb">
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let p"><strong>{{ p.name }}</strong></td>
-        </ng-container>
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef>Category</th>
-          <td mat-cell *matCellDef="let p">{{ getCategoryLabel(p.category) }}</td>
-        </ng-container>
-        <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef>Price</th>
-          <td mat-cell *matCellDef="let p">{{ p.price | currency:'EUR' }}</td>
-        </ng-container>
-        <ng-container matColumnDef="stock">
-          <th mat-header-cell *matHeaderCellDef>Stock</th>
-          <td mat-cell *matCellDef="let p">
-            <span [class]="'stock-num ' + getStockClass(p.stockQuantity)">{{ p.stockQuantity }}</span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="available">
-          <th mat-header-cell *matHeaderCellDef>Available</th>
-          <td mat-cell *matCellDef="let p">
-            <span class="avail-chip" [class.yes]="p.isAvailable" [class.no]="!p.isAvailable">
-              {{ p.isAvailable ? 'Yes' : 'No' }}
-            </span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let p">
-            <button mat-icon-button color="primary" matTooltip="Edit" (click)="openForm(p)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteProduct(p.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="cols"></tr>
-        <tr mat-row *matRowDef="let row; columns: cols;"></tr>
-      </table>
-      <mat-paginator [length]="totalCount" [pageSize]="filter.pageSize"
-        [pageIndex]="filter.page - 1" [pageSizeOptions]="[5,10,25]"
-        (page)="onPage($event)"></mat-paginator>
-    </div>
-  `,
-  styles: [`
-    .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    h1 { font-size:2rem; margin:0; }
-    .search-field { width:100%; margin-bottom:16px; }
-    .table-wrap { position:relative; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; margin-bottom:24px; }
-    .spinner-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.8); z-index:10; }
-    .full-table { width:100%; }
-    .thumb { width:48px; height:48px; object-fit:cover; border-radius:6px; }
-    .stock-num { font-weight:700; padding:2px 8px; border-radius:12px; }
-    .stock-zero { background:#ffebee; color:#c62828; }
-    .stock-low  { background:#fff3e0; color:#e65100; }
-    .stock-ok   { background:#e8f5e9; color:#2e7d32; }
-    .avail-chip { padding:3px 10px; border-radius:12px; font-size:.8rem; font-weight:600; }
-    .yes { background:#e8f5e9; color:#2e7d32; } .no { background:#ffebee; color:#c62828; }
-  `]
+  templateUrl: './product-management.component.html',
+  styleUrls: ['./product-management.component.scss']
 })
 export default class ProductManagementComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
