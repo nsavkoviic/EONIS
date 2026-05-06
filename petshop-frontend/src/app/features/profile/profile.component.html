@@ -51,7 +51,7 @@
             <button *ngFor="let a of animalOptions" mat-stroked-button
               [class.selected]="favAnimals.includes(a.value)"
               (click)="toggleAnimal(a.value)" class="animal-btn">
-              {{ a.emoji }} {{ a.label }}
+              {{ a.emoji }} {{ a.label === 'Small Animals' ? ('CATEGORIES.SMALL_ANIMALS' | translate) : ('CATEGORIES.' + a.label | uppercase | translate) }}
             </button>
           </div>
 
@@ -68,14 +68,14 @@
               </div>
               <button mat-icon-button color="warn" (click)="removePet(i)"><mat-icon>close</mat-icon></button>
             </div>
-            <p *ngIf="currentPets.length === 0" class="empty-pets">No pets added yet. Add one below!</p>
+            <p *ngIf="currentPets.length === 0" class="empty-pets">{{ 'PROFILE.NO_PETS' | translate }}</p>
           </div>
 
           <div class="add-pet-row">
             <mat-form-field appearance="outline" class="pet-field">
-              <mat-label>Type</mat-label>
+              <mat-label>{{ 'PROFILE.PET_TYPE_LABEL' | translate }}</mat-label>
               <mat-select [(ngModel)]="newPet.animalType">
-                <mat-option *ngFor="let a of animalOptions" [value]="a.value">{{ a.emoji }} {{ a.label }}</mat-option>
+                <mat-option *ngFor="let a of animalOptions" [value]="a.value">{{ a.emoji }} {{ a.label === 'Small Animals' ? ('CATEGORIES.SMALL_ANIMALS' | translate) : ('CATEGORIES.' + a.label | uppercase | translate) }}</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field appearance="outline" class="pet-field">
@@ -102,7 +102,7 @@
         <mat-card-header><mat-card-title>🌟 {{ 'PROFILE.RECOMMENDED' | translate }}</mat-card-title></mat-card-header>
         <mat-card-content>
           <div *ngIf="favAnimals.length === 0" class="reco-empty">
-            Set your favorite animals above to see personalized recommendations!
+            {{ 'PROFILE.NO_RECOMMENDATIONS' | translate }}
           </div>
           <div *ngIf="favAnimals.length > 0 && recoProducts.length === 0 && !recoLoading" class="reco-empty">
             No products found for your favorite category yet.

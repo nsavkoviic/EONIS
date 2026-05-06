@@ -9,8 +9,8 @@
 
       <!-- PHASE 1: Pet Info Form -->
       <div class="pet-form-card" *ngIf="phase === 1">
-        <h2 class="form-title">🐾 Tell me about your pet</h2>
-        <p class="form-hint">The more details you provide, the better my recommendations will be!</p>
+        <h2 class="form-title">🐾 {{ 'AI.CARD_TITLE' | translate }}</h2>
+        <p class="form-hint">{{ 'AI.CARD_SUBTITLE' | translate }}</p>
         <div class="form-grid">
           <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_NAME' | translate }}</mat-label><input matInput [(ngModel)]="petInfo.name" placeholder="e.g. Max"><mat-icon matSuffix>pets</mat-icon></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_TYPE' | translate }}</mat-label>
@@ -30,7 +30,7 @@
         <mat-form-field appearance="outline" class="full-width"><mat-label>{{ 'AI.DESCRIPTION' | translate }}</mat-label>
           <textarea matInput [(ngModel)]="petInfo.problem" rows="3" [placeholder]="'AI.DESCRIPTION_PLACEHOLDER' | translate"></textarea>
         </mat-form-field>
-        <div class="quick-prompts"><span class="quick-label">Quick topics:</span>
+        <div class="quick-prompts"><span class="quick-label">{{ 'AI.QUICK_TOPICS' | translate }}</span>
           <button class="quick-chip" *ngFor="let q of quickPrompts" (click)="petInfo.problem = q">{{ q }}</button>
         </div>
         <button class="start-btn" (click)="startChat()" [disabled]="!petInfo.species || !petInfo.problem.trim() || isLoading">

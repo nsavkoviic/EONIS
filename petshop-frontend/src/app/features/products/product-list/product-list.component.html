@@ -14,7 +14,7 @@
           <mat-select [(ngModel)]="selectedCategory" (ngModelChange)="onCategoryChange($event)">
             <mat-option [value]="null">{{ 'PRODUCTS.ALL_CATEGORIES' | translate }}</mat-option>
             <mat-option *ngFor="let c of categoryOptions" [value]="c.value">
-              {{ c.emoji }} {{ c.label }}
+              {{ c.emoji }} {{ c.value === 5 ? ('CATEGORIES.SMALL_ANIMALS' | translate) : ('CATEGORIES.' + c.label | uppercase | translate) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -69,7 +69,7 @@
           <img [src]="p.imageUrl || 'https://placehold.co/400x200?text=No+Image'"
             [alt]="p.name" class="product-img">
           <span class="recommended-badge" *ngIf="isRecommended(p.category)">⭐ {{ 'PRODUCTS.FOR_YOU' | translate }}</span>
-          <span class="category-chip-abs">{{ getCategoryLabel(p.category) }}</span>
+          <span class="category-chip-abs">{{ p.category === 5 ? ('CATEGORIES.SMALL_ANIMALS' | translate) : ('CATEGORIES.' + getCategoryLabel(p.category) | uppercase | translate) }}</span>
         </div>
         <div class="card-body">
           <h3 class="product-name">{{ p.name }}</h3>

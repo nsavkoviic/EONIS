@@ -6,8 +6,8 @@
     </div>
 
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Search products...</mat-label>
-      <input matInput [formControl]="searchCtrl">
+      <mat-label>{{ 'ADMIN.SEARCH_PRODUCTS' | translate }}</mat-label>
+      <input matInput [formControl]="searchCtrl" [placeholder]="'ADMIN.SEARCH_PRODUCTS' | translate">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
@@ -28,7 +28,7 @@
         </ng-container>
         <ng-container matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.CATEGORY' | translate }}</th>
-          <td mat-cell *matCellDef="let p">{{ getCategoryLabel(p.category) }}</td>
+          <td mat-cell *matCellDef="let p">{{ p.category === 5 ? ('CATEGORIES.SMALL_ANIMALS' | translate) : ('CATEGORIES.' + getCategoryLabel(p.category) | uppercase | translate) }}</td>
         </ng-container>
         <ng-container matColumnDef="price">
           <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.PRICE' | translate }}</th>
@@ -44,12 +44,12 @@
           <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.AVAILABLE' | translate }}</th>
           <td mat-cell *matCellDef="let p">
             <span class="avail-chip" [class.yes]="p.isAvailable" [class.no]="!p.isAvailable">
-              {{ p.isAvailable ? 'Yes' : 'No' }}
+              {{ p.isAvailable ? ('ADMIN.YES' | translate) : ('ADMIN.NO_ADMIN' | translate) }}
             </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.ACTIONS' | translate }}</th>
           <td mat-cell *matCellDef="let p">
             <button mat-icon-button color="primary" matTooltip="Edit" (click)="openForm(p)">
               <mat-icon>edit</mat-icon>
