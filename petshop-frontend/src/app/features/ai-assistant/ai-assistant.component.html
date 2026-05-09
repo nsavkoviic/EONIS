@@ -15,9 +15,9 @@
           <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_NAME' | translate }}</mat-label><input matInput [(ngModel)]="petInfo.name" placeholder="e.g. Max"><mat-icon matSuffix>pets</mat-icon></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_TYPE' | translate }}</mat-label>
             <mat-select [(ngModel)]="petInfo.species">
-              <mat-option value="dog">🐕 Dog</mat-option><mat-option value="cat">🐈 Cat</mat-option>
-              <mat-option value="bird">🐦 Bird</mat-option><mat-option value="fish">🐠 Fish</mat-option>
-              <mat-option value="reptile">🦎 Reptile</mat-option><mat-option value="small animal">🐹 Small Animal</mat-option>
+              <mat-option value="dog">🐕 {{ 'AI.DOG' | translate }}</mat-option><mat-option value="cat">🐈 {{ 'AI.CAT' | translate }}</mat-option>
+              <mat-option value="bird">🐦 {{ 'AI.BIRD' | translate }}</mat-option><mat-option value="fish">🐠 {{ 'AI.FISH' | translate }}</mat-option>
+              <mat-option value="reptile">🦎 {{ 'AI.REPTILE' | translate }}</mat-option><mat-option value="small animal">🐹 {{ 'AI.SMALL_ANIMAL' | translate }}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_BREED' | translate }}</mat-label><input matInput [(ngModel)]="petInfo.breed" placeholder="e.g. Golden Retriever"></mat-form-field>
@@ -31,7 +31,7 @@
           <textarea matInput [(ngModel)]="petInfo.problem" rows="3" [placeholder]="'AI.DESCRIPTION_PLACEHOLDER' | translate"></textarea>
         </mat-form-field>
         <div class="quick-prompts"><span class="quick-label">{{ 'AI.QUICK_TOPICS' | translate }}</span>
-          <button class="quick-chip" *ngFor="let q of quickPrompts" (click)="petInfo.problem = q">{{ q }}</button>
+          <button class="quick-chip" *ngFor="let q of quickPrompts" (click)="petInfo.problem = q.value">{{ q.label | translate }}</button>
         </div>
         <button class="start-btn" (click)="startChat()" [disabled]="!petInfo.species || !petInfo.problem.trim() || isLoading">
           <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>

@@ -17,7 +17,7 @@ import { NotificationService } from '../../core/services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Product } from '../../core/models/product.models';
 import { environment } from '../../../environments/environment';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 interface ChatMessage { role: 'user' | 'assistant'; content: string; products?: RecommendedProduct[]; timestamp: Date; }
 interface RecommendedProduct { productId: string; quantity: number; reason: string; product?: Product; }
 interface PetInfo { name: string; species: string; breed: string; weightKg: number | null; ageYears: number | null; sex: string; problem: string; }
@@ -39,9 +39,16 @@ export default class AiAssistantComponent implements OnInit, OnDestroy {
   userInput = '';
   recommendedProducts: RecommendedProduct[] = [];
   allProducts: Product[] = [];
-  quickPrompts = ['Need food for 3 months', 'Looking for toys to keep busy', 'Dental health treats', 'Need a harness for walks', 'My pet is overweight', 'Best food for senior pet'];
+  quickPrompts = [
+    { value: 'Need food for 3 months', label: 'AI.QUICK_1' },
+    { value: 'Looking for toys to keep busy', label: 'AI.QUICK_2' },
+    { value: 'Dental health treats', label: 'AI.QUICK_3' },
+    { value: 'Need a harness for walks', label: 'AI.QUICK_4' },
+    { value: 'My pet is overweight', label: 'AI.QUICK_5' },
+    { value: 'Best food for senior pet', label: 'AI.QUICK_6' }
+  ];
 
-  constructor(private productSvc: ProductService, private cartSvc: CartService, private notify: NotificationService, private authSvc: AuthService) { }
+  constructor(private productSvc: ProductService, private cartSvc: CartService, private notify: NotificationService, private authSvc: AuthService, private translate: TranslateService) { }
 
   ngOnInit(): void {
     this.authSvc.isLoggedIn$.pipe(takeUntil(this.destroy$)).subscribe(v => this.isLoggedIn = v);
@@ -162,7 +169,7 @@ Keep responses concise — 2-4 paragraphs max.`;
   changeQty(reco: RecommendedProduct, delta: number): void { reco.quantity = Math.max(1, reco.quantity + delta); }
   addToCart(reco: RecommendedProduct): void {
     if (!reco.product) return;
-    this.cartSvc.addItem({ productId: reco.productId, quantity: reco.quantity }).subscribe(() => this.notify.showSuccess(`"${reco.product!.name}" (x${reco.quantity}) added to cart!`));
+    this.cartSvc.addItem({ productId: reco.productId, quantity: reco.quantity }).subscribe(() => this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_CART')));
   }
   addAllToCart(): void {
     let count = 0;
@@ -170,7 +177,7 @@ Keep responses concise — 2-4 paragraphs max.`;
       if (reco.product?.isAvailable) {
         this.cartSvc.addItem({ productId: reco.productId, quantity: reco.quantity }).subscribe(() => {
           count++;
-          if (count === this.recommendedProducts.filter(r => r.product?.isAvailable).length) this.notify.showSuccess(`${count} products added to cart!`);
+          if (count === this.recommendedProducts.filter(r => r.product?.isAvailable).length) this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_CART'));
         });
       }
     });

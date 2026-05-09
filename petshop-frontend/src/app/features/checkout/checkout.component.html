@@ -33,14 +33,14 @@
                 <div class="ship-price" [class.free-price]="(cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD">
                   {{ (cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD ? ('CHECKOUT.FREE' | translate) + ' 🎉' : (opt.price | currency:'EUR') }}
                 </div>
-                <div class="ship-days">{{ opt.estimatedDays }}</div>
+                <div class="ship-days">{{ opt.estimatedDays | translate }}</div>
               </div>
             </div>
 
             <h3 class="section-label">{{ 'CHECKOUT.HAVE_DISCOUNT' | translate }}</h3>
             <div class="discount-row">
               <mat-form-field appearance="outline" class="discount-input">
-                <mat-label>Discount code</mat-label>
+                <mat-label>{{ 'CHECKOUT.DISCOUNT_LABEL' | translate }}</mat-label>
                 <input matInput [(ngModel)]="discountCode" [ngModelOptions]="{standalone:true}"
                        [placeholder]="'CHECKOUT.DISCOUNT_PLACEHOLDER' | translate">
                 <mat-hint>{{ 'CHECKOUT.DISCOUNT_HINT' | translate }}</mat-hint>

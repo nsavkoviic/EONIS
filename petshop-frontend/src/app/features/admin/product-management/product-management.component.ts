@@ -20,7 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ProductService } from '../../../core/services/product.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Product, ProductFilter } from '../../../core/models/product.models';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-dialog',
@@ -140,7 +140,8 @@ export default class ProductManagementComponent implements OnInit, OnDestroy {
   constructor(
     private productSvc: ProductService,
     private dialog: MatDialog,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -177,7 +178,7 @@ export default class ProductManagementComponent implements OnInit, OnDestroy {
         : this.productSvc.create(result);
       obs.subscribe({
         next: () => {
-          this.notify.showSuccess('Product saved!');
+          this.notify.showSuccess(this.translate.instant('TOAST.PRODUCT_SAVED'));
           this.loadProducts();
         },
         error: () => {}
@@ -188,7 +189,7 @@ export default class ProductManagementComponent implements OnInit, OnDestroy {
   deleteProduct(id: string): void {
     if (!window.confirm('Delete this product?')) return;
     this.productSvc.delete(id).subscribe(() => {
-      this.notify.showSuccess('Product deleted'); this.loadProducts();
+      this.notify.showSuccess(this.translate.instant('TOAST.PRODUCT_DELETED')); this.loadProducts();
     });
   }
 

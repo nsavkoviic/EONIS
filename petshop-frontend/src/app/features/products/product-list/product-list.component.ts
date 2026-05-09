@@ -24,7 +24,7 @@ import { UserService } from '../../../core/services/user.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Product, ProductFilter, PagedResponse } from '../../../core/models/product.models';
 import { StarRatingComponent } from '../../../shared/star-rating/star-rating.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-list',
@@ -67,11 +67,11 @@ export default class ProductListComponent implements OnInit, OnDestroy {
   ];
 
   sortOptions = [
-    { value: 'newest',     label: 'Newest',         sortBy: undefined,  desc: false },
-    { value: 'name_asc',   label: 'Name A–Z',        sortBy: 'name',     desc: false },
-    { value: 'name_desc',  label: 'Name Z–A',        sortBy: 'name',     desc: true  },
-    { value: 'price_asc',  label: 'Price Low–High',  sortBy: 'price',    desc: false },
-    { value: 'price_desc', label: 'Price High–Low',  sortBy: 'price',    desc: true  },
+    { value: 'newest',     label: 'PRODUCTS.SORT_NEWEST',         sortBy: undefined,  desc: false },
+    { value: 'name_asc',   label: 'PRODUCTS.SORT_NAME_ASC',        sortBy: 'name',     desc: false },
+    { value: 'name_desc',  label: 'PRODUCTS.SORT_NAME_DESC',        sortBy: 'name',     desc: true  },
+    { value: 'price_asc',  label: 'PRODUCTS.SORT_PRICE_ASC',  sortBy: 'price',    desc: false },
+    { value: 'price_desc', label: 'PRODUCTS.SORT_PRICE_DESC',  sortBy: 'price',    desc: true  },
   ];
 
   constructor(
@@ -82,7 +82,8 @@ export default class ProductListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private notify: NotificationService,
     private wishlistSvc: WishlistService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -175,7 +176,7 @@ export default class ProductListComponent implements OnInit, OnDestroy {
 
   addToCart(p: Product): void {
     this.cartSvc.addItem({ productId: p.id, quantity: 1 }).subscribe({
-      next: () => this.notify.showSuccess(`"${p.name}" added to cart!`),
+      next: () => this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_CART')),
     });
   }
 
@@ -191,11 +192,11 @@ export default class ProductListComponent implements OnInit, OnDestroy {
     }
     if (this.wishlistIds.has(p.id)) {
       this.wishlistSvc.removeFromWishlist(p.id).subscribe(() =>
-        this.notify.showSuccess('Removed from wishlist')
+        this.notify.showSuccess(this.translate.instant('TOAST.REMOVED_FROM_WISHLIST'))
       );
     } else {
       this.wishlistSvc.addToWishlist(p.id).subscribe(() =>
-        this.notify.showSuccess('Added to wishlist')
+        this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_WISHLIST'))
       );
     }
   }

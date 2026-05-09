@@ -7,6 +7,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { PaginatorIntlService } from './core/services/paginator-intl.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -27,5 +29,6 @@ export const appConfig: ApplicationConfig = {
         }
       })
     ),
+    { provide: MatPaginatorIntl, useClass: PaginatorIntlService }
   ]
 };

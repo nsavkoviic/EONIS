@@ -79,6 +79,7 @@ export const routes: Routes = [
 
   {
     path: 'ai-assistant',
+    canActivate: [authGuard],
     loadComponent: () => import('./features/ai-assistant/ai-assistant.component')
   },
 

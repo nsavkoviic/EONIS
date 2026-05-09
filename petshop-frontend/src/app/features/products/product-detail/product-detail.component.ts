@@ -22,7 +22,7 @@ import { WishlistService } from '../../../core/services/wishlist.service';
 import { Product } from '../../../core/models/product.models';
 import { ProductReviewSummary } from '../../../core/models/review.models';
 import { StarRatingComponent } from '../../../shared/star-rating/star-rating.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-detail',
@@ -62,7 +62,8 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
     public authSvc: AuthService,
     private reviewSvc: ReviewService,
     private wishlistSvc: WishlistService,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -89,7 +90,7 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
   addToCart(): void {
     if (!this.product) return;
     this.cartSvc.addItem({ productId: this.product.id, quantity: this.quantity }).subscribe({
-      next: () => this.notify.showSuccess(`"${this.product!.name}" added to cart!`),
+      next: () => this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_CART')),
     });
   }
 
@@ -99,8 +100,11 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
 
   getRatingLabel(rating: number): string {
     const labels: Record<number, string> = {
-      1: '😞 Poor', 2: '😕 Fair', 3: '😊 Good',
-      4: '😄 Very Good', 5: '🤩 Excellent!'
+      1: '😞 ' + this.translate.instant('PRODUCT_DETAIL.RATING_1'), 
+      2: '😕 ' + this.translate.instant('PRODUCT_DETAIL.RATING_2'), 
+      3: '😊 ' + this.translate.instant('PRODUCT_DETAIL.RATING_3'),
+      4: '😄 ' + this.translate.instant('PRODUCT_DETAIL.RATING_4'), 
+      5: '🤩 ' + this.translate.instant('PRODUCT_DETAIL.RATING_5')
     };
     return labels[rating] ?? '';
   }
@@ -118,12 +122,12 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
     if (this.isInWishlist) {
       this.wishlistSvc.removeFromWishlist(this.product.id).subscribe(() => {
         this.isInWishlist = false;
-        this.notify.showSuccess('Removed from wishlist');
+        this.notify.showSuccess(this.translate.instant('TOAST.REMOVED_FROM_WISHLIST'));
       });
     } else {
       this.wishlistSvc.addToWishlist(this.product.id).subscribe(() => {
         this.isInWishlist = true;
-        this.notify.showSuccess('Added to wishlist');
+        this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_WISHLIST'));
       });
     }
   }
@@ -131,11 +135,11 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
   submitReview(): void {
     if (!this.product) return;
     if (!this.newReview.rating) {
-      this.notify.showError('Please select a rating');
+      this.notify.showError(this.translate.instant('TOAST.ERROR_GENERIC'));
       return;
     }
     if (!this.newReview.comment.trim()) {
-      this.notify.showError('Please write a comment');
+      this.notify.showError(this.translate.instant('TOAST.ERROR_GENERIC'));
       return;
     }
     
@@ -145,7 +149,7 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
         this.loadReviews();
         this.newReview = { rating: 0, comment: '' };
         this.reviewSubmittedPending = true;
-        this.notify.showSuccess('Review submitted and pending approval!');
+        this.notify.showSuccess(this.translate.instant('TOAST.REVIEW_SUBMITTED'));
         this.isSubmittingReview = false;
       },
       error: (err) => {
@@ -161,7 +165,7 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
     this.reviewSvc.deleteReview(this.product.id, reviewId).subscribe({
       next: () => {
         this.loadReviews();
-        this.notify.showSuccess('Review deleted');
+        this.notify.showSuccess(this.translate.instant('TOAST.REVIEW_REJECTED'));
       }
     });
   }

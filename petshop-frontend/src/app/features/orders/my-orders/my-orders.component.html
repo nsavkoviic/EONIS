@@ -78,11 +78,11 @@
             <div class="detail-meta">
               <p *ngIf="full.shippingAddress">
                 <mat-icon class="meta-icon">local_shipping</mat-icon>
-                <strong>{{ 'ORDERS.SHIPPING' | translate }}:</strong> {{ full.shippingAddress }}
+                <strong>{{ 'ORDERS.SHIPPING_LABEL' | translate }}:</strong> {{ full.shippingAddress }}
               </p>
               <p *ngIf="full.stripePaymentIntentId">
                 <mat-icon class="meta-icon">payment</mat-icon>
-                <strong>{{ 'ORDERS.PAYMENT' | translate }}:</strong>
+                <strong>{{ 'ORDERS.PAYMENT_LABEL' | translate }}:</strong>
                 <code [matTooltip]="full.stripePaymentIntentId!">
                   {{ full.stripePaymentIntentId!.slice(0, 24) }}...
                 </code>

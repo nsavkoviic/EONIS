@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +33,8 @@ export default class LoginComponent {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private translate: TranslateService
   ) {}
 
   onSubmit(): void {
@@ -41,7 +42,7 @@ export default class LoginComponent {
     this.isLoading = true;
     this.auth.login(this.form.value as any).subscribe({
       next: () => {
-        this.notify.showSuccess('Welcome back!');
+        this.notify.showSuccess(this.translate.instant('TOAST.LOGIN_SUCCESS'));
         this.router.navigate(['/home']);
       },
       error: () => { this.isLoading = false; },

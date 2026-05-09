@@ -23,7 +23,7 @@ import { Product } from '../../core/models/product.models';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
@@ -73,7 +73,8 @@ export default class ProfileComponent implements OnInit, OnDestroy {
     private cartSvc: CartService,
     private notify: NotificationService,
     private wishlistSvc: WishlistService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -99,7 +100,7 @@ export default class ProfileComponent implements OnInit, OnDestroy {
   savePersonal(): void {
     this.savingInfo = true;
     this.userSvc.updateProfile(this.infoForm.value).pipe(takeUntil(this.destroy$)).subscribe({
-      next: p => { this.profile = p; this.savingInfo = false; this.notify.showSuccess('Profile updated!'); },
+      next: p => { this.profile = p; this.savingInfo = false; this.notify.showSuccess(this.translate.instant('TOAST.PROFILE_SAVED')); },
       error: () => this.savingInfo = false,
     });
   }
@@ -115,9 +116,9 @@ export default class ProfileComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.loadRecommendations();
-          this.notify.showSuccess('Preferences saved!');
+          this.notify.showSuccess(this.translate.instant('TOAST.PROFILE_SAVED'));
         },
-        error: () => this.notify.showError('Failed to save preferences')
+        error: () => this.notify.showError(this.translate.instant('TOAST.ERROR_GENERIC'))
       });
   }
 
@@ -130,10 +131,10 @@ export default class ProfileComponent implements OnInit, OnDestroy {
     this.userSvc.updateProfile({ currentPets: this.currentPets })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => this.notify.showSuccess('Pet added!'),
+        next: () => this.notify.showSuccess(this.translate.instant('TOAST.PROFILE_SAVED')),
         error: () => {
           this.currentPets.pop(); // revert on error
-          this.notify.showError('Failed to save pet');
+          this.notify.showError(this.translate.instant('TOAST.ERROR_GENERIC'));
         }
       });
   }
@@ -143,8 +144,8 @@ export default class ProfileComponent implements OnInit, OnDestroy {
     this.userSvc.updateProfile({ currentPets: this.currentPets })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => this.notify.showSuccess('Pet removed!'),
-        error: () => this.notify.showError('Failed to remove pet')
+        next: () => this.notify.showSuccess(this.translate.instant('TOAST.PROFILE_SAVED')),
+        error: () => this.notify.showError(this.translate.instant('TOAST.ERROR_GENERIC'))
       });
   }
 
@@ -161,7 +162,7 @@ export default class ProfileComponent implements OnInit, OnDestroy {
 
   addToCart(p: Product): void {
     this.cartSvc.addItem({ productId: p.id, quantity: 1 }).subscribe({
-      next: () => this.notify.showSuccess(`"${p.name}" added to cart!`),
+      next: () => this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_CART')),
     });
   }
 
@@ -173,10 +174,10 @@ export default class ProfileComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     if (this.wishlistIds.has(p.id)) {
       this.wishlistSvc.removeFromWishlist(p.id).subscribe(() =>
-        this.notify.showSuccess('Removed from wishlist'));
+        this.notify.showSuccess(this.translate.instant('TOAST.REMOVED_FROM_WISHLIST')));
     } else {
       this.wishlistSvc.addToWishlist(p.id).subscribe(() =>
-        this.notify.showSuccess('Added to wishlist'));
+        this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_WISHLIST')));
     }
   }
 

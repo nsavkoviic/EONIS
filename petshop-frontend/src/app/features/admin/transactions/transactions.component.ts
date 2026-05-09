@@ -47,7 +47,7 @@ interface PendingReviewDto {
   isApproved: boolean;
 }
 import { OrderStatus, Order } from '../../../core/models/order.models';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-transactions',
@@ -117,7 +117,8 @@ export default class TransactionsComponent implements OnInit, OnDestroy {
     private orderSvc: OrderService,
     private reviewSvc: ReviewService,
     private fb: FormBuilder,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void { this.loadTransactions(); this.loadOrders(); }
@@ -158,14 +159,14 @@ export default class TransactionsComponent implements OnInit, OnDestroy {
   onOrderPage(e: PageEvent): void { this.orderPage = e.pageIndex + 1; this.orderPageSize = e.pageSize; this.loadOrders(); }
   updateOrderStatus(orderId: string, status: OrderStatus): void {
     this.orderSvc.updateStatus(orderId, status).pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.notify.showSuccess('Status updated');
+      this.notify.showSuccess(this.translate.instant('TOAST.ORDER_STATUS_UPDATED'));
       this.loadOrders();
     });
   }
   markRefunded(orderId: string): void {
     if (!window.confirm('Mark this order as Refunded?')) return;
     this.orderSvc.updateStatus(orderId, OrderStatus.Refunded).pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.notify.showSuccess('Order marked as refunded');
+      this.notify.showSuccess(this.translate.instant('TOAST.ORDER_STATUS_UPDATED'));
       this.loadTransactions(); this.loadOrders();
     });
   }
@@ -181,7 +182,7 @@ export default class TransactionsComponent implements OnInit, OnDestroy {
   createCoupon(): void {
     this.paymentSvc.createDiscountCode(this.newCoupon).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
-        this.notify.showSuccess('Coupon created!');
+        this.notify.showSuccess(this.translate.instant('TOAST.COUPON_SAVED'));
         this.newCoupon = { code: '', discountPercent: 10, maxUses: 100, expiresAt: null };
         this.showCouponForm = false;
         this.loadCoupons();
@@ -190,14 +191,14 @@ export default class TransactionsComponent implements OnInit, OnDestroy {
   }
   toggleCoupon(id: string, isActive: boolean): void {
     this.paymentSvc.updateDiscountCode(id, { isActive }).pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.notify.showSuccess('Coupon updated');
+      this.notify.showSuccess(this.translate.instant('TOAST.COUPON_SAVED'));
       this.loadCoupons();
     });
   }
   deleteCoupon(id: string): void {
     if (!window.confirm('Deactivate this coupon?')) return;
     this.paymentSvc.deleteDiscountCode(id).pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.notify.showSuccess('Coupon deactivated');
+      this.notify.showSuccess(this.translate.instant('TOAST.COUPON_DELETED'));
       this.loadCoupons();
     });
   }
@@ -212,14 +213,14 @@ export default class TransactionsComponent implements OnInit, OnDestroy {
   }
   approveReview(r: any): void {
     this.reviewSvc.approveReview(r.productId, r.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.notify.showSuccess('Review approved');
+      this.notify.showSuccess(this.translate.instant('TOAST.REVIEW_APPROVED'));
       this.loadPendingReviews();
     });
   }
   deleteReview(r: any): void {
     if (!window.confirm('Reject this review?')) return;
     this.reviewSvc.deleteReview(r.productId, r.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.notify.showSuccess('Review rejected');
+      this.notify.showSuccess(this.translate.instant('TOAST.REVIEW_REJECTED'));
       this.loadPendingReviews();
     });
   }

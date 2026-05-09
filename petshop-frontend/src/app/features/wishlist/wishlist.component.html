@@ -5,7 +5,7 @@
     <div class="empty-state" *ngIf="!isLoading && items.length === 0">
       <mat-icon class="huge-icon">favorite_border</mat-icon>
       <h2>{{ 'WISHLIST.EMPTY' | translate }}</h2>
-      <p>Save items you love to your wishlist to easily find them later.</p>
+      <p>{{ 'WISHLIST.SAVE_HINT' | translate }}</p>
       <a mat-raised-button color="primary" routerLink="/products" class="explore-btn">
         {{ 'WISHLIST.BROWSE_BTN' | translate }}
       </a>
@@ -17,7 +17,7 @@
         <div class="img-wrapper">
           <img [src]="item.productImageUrl || 'https://placehold.co/400x200?text=No+Image'"
                [alt]="item.productName" class="product-img">
-          <span class="category-chip-abs">Saved</span>
+          <span class="category-chip-abs">{{ 'WISHLIST.TITLE' | translate }}</span>
         </div>
         <div class="card-body">
           <h3 class="product-name">{{ item.productName }}</h3>
@@ -25,7 +25,7 @@
             <span class="price">{{ item.productPrice | currency:'EUR' }}</span>
             <span class="stock-badge" [class.in-stock]="item.productIsAvailable"
                   [class.out-stock]="!item.productIsAvailable">
-              {{ item.productIsAvailable ? 'In Stock' : 'Out of Stock' }}
+              {{ item.productIsAvailable ? ('PRODUCTS.IN_STOCK' | translate) : ('PRODUCTS.OUT_OF_STOCK' | translate) }}
             </span>
           </div>
         </div>

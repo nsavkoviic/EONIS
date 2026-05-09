@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { CartService } from '../../core/services/cart.service';
 import { NotificationService } from '../../core/services/notification.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WishlistItem } from '../../core/models/wishlist.models';
 
 @Component({
@@ -28,7 +28,8 @@ export default class WishlistComponent implements OnInit, OnDestroy {
     private wishlistSvc: WishlistService,
     private cartSvc: CartService,
     private notify: NotificationService,
-    public router: Router
+    public router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -50,13 +51,13 @@ export default class WishlistComponent implements OnInit, OnDestroy {
 
   removeItem(productId: string): void {
     this.wishlistSvc.removeFromWishlist(productId).subscribe(() => {
-      this.notify.showSuccess('Item removed from wishlist');
+      this.notify.showSuccess(this.translate.instant('TOAST.REMOVED_FROM_WISHLIST'));
     });
   }
 
   addToCart(item: WishlistItem): void {
     this.cartSvc.addItem({ productId: item.productId, quantity: 1 }).subscribe(() => {
-      this.notify.showSuccess(`"${item.productName}" added to cart!`);
+      this.notify.showSuccess(this.translate.instant('TOAST.ADDED_TO_CART'));
     });
   }
 }

@@ -22,7 +22,7 @@
         <mat-form-field appearance="outline" class="filter-chip-field">
           <mat-label>{{ 'PRODUCTS.SORT_BY' | translate }}</mat-label>
           <mat-select [(ngModel)]="selectedSort" (ngModelChange)="onSortChange($event)">
-            <mat-option *ngFor="let s of sortOptions" [value]="s.value">{{ s.label }}</mat-option>
+            <mat-option *ngFor="let s of sortOptions" [value]="s.value">{{ s.label | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
 

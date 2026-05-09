@@ -43,10 +43,10 @@ export default class CheckoutComponent implements OnInit, OnDestroy {
   readonly FREE_SHIPPING_THRESHOLD = 50.00;
 
   shippingOptions: ShippingOption[] = [
-    { id:'dhl',   name:'DHL Express',    logo:'🚀', price:5.99, estimatedDays:'1-2 business days' },
-    { id:'ups',   name:'UPS Standard',   logo:'📦', price:3.99, estimatedDays:'3-5 business days' },
-    { id:'fedex', name:'FedEx Economy',  logo:'✈️', price:2.99, estimatedDays:'5-7 business days' },
-    { id:'local', name:'Local Delivery', logo:'🏠', price:1.99, estimatedDays:'2-3 business days' },
+    { id:'dhl',   name:'DHL Express',    logo:'🚀', price:5.99, estimatedDays:'CHECKOUT.BUSINESS_DAYS_12' },
+    { id:'ups',   name:'UPS Standard',   logo:'📦', price:3.99, estimatedDays:'CHECKOUT.BUSINESS_DAYS_35' },
+    { id:'fedex', name:'FedEx Economy',  logo:'✈️', price:2.99, estimatedDays:'CHECKOUT.BUSINESS_DAYS_57' },
+    { id:'local', name:'Local Delivery', logo:'🏠', price:1.99, estimatedDays:'CHECKOUT.BUSINESS_DAYS_23' },
   ];
 
   selectedShipping: ShippingOption | null = null;

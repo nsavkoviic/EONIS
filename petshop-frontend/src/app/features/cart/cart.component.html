@@ -19,7 +19,7 @@
                  [alt]="item.productName" class="item-img">
             <div class="item-info">
               <div class="item-name">{{ item.productName }}</div>
-              <div class="item-price">{{ item.unitPrice | currency:'EUR' }} each</div>
+              <div class="item-price">{{ item.unitPrice | currency:'EUR' }} {{ 'CART.EACH' | translate }}</div>
             </div>
             <div class="item-qty">
               <button mat-icon-button (click)="changeQty(item, item.quantity - 1)">
@@ -39,7 +39,7 @@
 
         <div class="clear-row">
           <button mat-stroked-button color="warn" (click)="clearCart()">
-            <mat-icon>delete_sweep</mat-icon> Clear Cart
+            <mat-icon>delete_sweep</mat-icon> {{ 'CART.CLEAR_CART' | translate }}
           </button>
         </div>
       </div>
@@ -48,11 +48,11 @@
       <div class="summary-col">
         <mat-card class="summary-card">
           <mat-card-header>
-            <mat-card-title>Order Summary</mat-card-title>
+            <mat-card-title>{{ 'CART.ORDER_SUMMARY' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <div class="summary-row">
-              <span>Items ({{ cart.totalItems }})</span>
+              <span>{{ 'CART.ITEMS_COUNT' | translate }} ({{ cart.totalItems }})</span>
               <span>{{ cart.totalPrice | currency:'EUR' }}</span>
             </div>
             <mat-divider class="divider"></mat-divider>

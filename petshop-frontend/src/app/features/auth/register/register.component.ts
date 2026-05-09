@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const pw  = control.get('password')?.value;
@@ -45,7 +45,8 @@ export default class RegisterComponent {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private translate: TranslateService
   ) {}
 
   onSubmit(): void {
@@ -54,7 +55,7 @@ export default class RegisterComponent {
     const { confirmPassword, ...dto } = this.form.value as any;
     this.auth.register(dto).subscribe({
       next: () => {
-        this.notify.showSuccess('Account created successfully!');
+        this.notify.showSuccess(this.translate.instant('TOAST.REGISTER_SUCCESS'));
         this.router.navigate(['/home']);
       },
       error: () => { this.isLoading = false; },

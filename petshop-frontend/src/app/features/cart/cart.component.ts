@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CartService } from '../../core/services/cart.service';
 import { NotificationService } from '../../core/services/notification.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Cart, CartItem } from '../../core/models/cart.models';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -33,7 +33,8 @@ export default class CartComponent implements OnInit, OnDestroy {
   constructor(
     private cartSvc: CartService,
     private router: Router,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -62,7 +63,7 @@ export default class CartComponent implements OnInit, OnDestroy {
 
   clearCart(): void {
     this.cartSvc.clearCart().subscribe(() =>
-      this.notify.showSuccess('Cart cleared')
+      this.notify.showSuccess(this.translate.instant('TOAST.CART_CLEARED'))
     );
   }
 

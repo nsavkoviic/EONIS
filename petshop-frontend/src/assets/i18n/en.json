@@ -61,7 +61,11 @@
     "CTA_TITLE": "Not sure what your pet needs?",
     "CTA_SUBTITLE": "Our AI assistant will analyze your pet's profile and recommend the perfect products.",
     "CTA_BTN": "Try AI Assistant",
-    "DISCOUNT_BANNER": "Use code WELCOME10 for 10% off your first order!"
+    "DISCOUNT_BANNER": "Use code WELCOME10 for 10% off your first order!",
+    "STAT_PRODUCTS": "Products",
+    "STAT_SHIPPING": "Shipping €50+",
+    "STAT_RATED": "Rated",
+    "STAT_FREE": "Free"
   },
   "PRODUCTS": {
     "TITLE": "Our Products",
@@ -83,7 +87,13 @@
     "FOR_YOU": "For You",
     "OUT_OF_STOCK": "Out of Stock",
     "AVAILABLE": "Available",
-    "PAGE_OF": "of"
+    "PAGE_OF": "of",
+    "ALL_CATEGORIES": "All Categories",
+    "CLEAR": "Clear",
+    "ADD_WISHLIST": "Add to Wishlist",
+    "REMOVE_WISHLIST": "Remove from Wishlist",
+    "SORT_NEWEST": "Newest",
+    "ITEMS_PER_PAGE": "Items per page"
   },
   "PRODUCT_DETAIL": {
     "ADD_TO_CART": "Add to Cart",
@@ -100,7 +110,20 @@
     "MUST_PURCHASE": "Purchase this product to leave a review.",
     "BACK_TO_PRODUCTS": "Back to Products",
     "IN_STOCK": "In stock",
-    "LOGIN_TO_REVIEW": "Login to write a review"
+    "LOGIN_TO_REVIEW": "Login to write a review",
+    "CUSTOMER_REVIEWS": "Customer Reviews",
+    "WRITE_REVIEW_TITLE": "Write a Review",
+    "WRITE_REVIEW_SUBTITLE": "Share your experience with this product",
+    "YOUR_RATING": "Your Rating",
+    "REVIEW_PLACEHOLDER": "Share your experience with this product...",
+    "PUBLISH_REVIEW": "Publish Review",
+    "PENDING_APPROVAL": "Your review has been submitted and is pending admin approval. Thank you!",
+    "RATING_1": "Terrible",
+    "RATING_2": "Bad",
+    "RATING_3": "OK",
+    "RATING_4": "Good",
+    "RATING_5": "Excellent",
+    "SUBMITTING": "Submitting..."
   },
   "CART": {
     "TITLE": "Your Cart",
@@ -111,7 +134,11 @@
     "CHECKOUT_BTN": "Proceed to Checkout",
     "REMOVE": "Remove",
     "QUANTITY": "Quantity",
-    "SUBTOTAL": "Subtotal"
+    "SUBTOTAL": "Subtotal",
+    "CLEAR_CART": "Clear Cart",
+    "EACH": "each",
+    "ORDER_SUMMARY": "Order Summary",
+    "ITEMS_COUNT": "Items"
   },
   "CHECKOUT": {
     "TITLE": "Checkout",
@@ -137,7 +164,21 @@
     "ZIP": "ZIP / Postal Code",
     "COUNTRY": "Country",
     "BACK_BTN": "Back",
-    "PAY_BTN": "Place Order & Pay"
+    "PAY_BTN": "Place Order & Pay",
+    "FREE_SHIPPING_BANNER": "You qualify for FREE shipping on this order!",
+    "SELECT_SHIPPING": "Select Shipping Method",
+    "HAVE_DISCOUNT": "Have a discount code?",
+    "CONTINUE": "Continue to Details",
+    "DISCOUNT_PLACEHOLDER": "e.g. WELCOME10",
+    "APPLY": "Apply",
+    "INVALID_CODE": "Invalid or expired discount code",
+    "DISCOUNT_APPLIED": "discount applied!",
+    "BACK": "Back",
+    "PLACE_ORDER": "Place Order & Pay",
+    "BUSINESS_DAYS_12": "1-2 business days",
+    "BUSINESS_DAYS_35": "3-5 business days",
+    "BUSINESS_DAYS_57": "5-7 business days",
+    "BUSINESS_DAYS_23": "2-3 business days"
   },
   "ORDERS": {
     "TITLE": "My Orders",
@@ -156,7 +197,21 @@
     "TIMELINE_SHIPPED": "Shipped",
     "TIMELINE_DELIVERED": "Delivered",
     "TIMELINE_CANCELLED": "Cancelled",
-    "TIMELINE_REFUNDED": "Refunded"
+    "TIMELINE_REFUNDED": "Refunded",
+    "STATUS_PENDING": "Pending",
+    "STATUS_PROCESSING": "Processing",
+    "STATUS_SHIPPED": "Shipped",
+    "STATUS_DELIVERED": "Delivered",
+    "STATUS_CANCELLED": "Cancelled",
+    "STATUS_REFUNDED": "Refunded",
+    "RATE": "Rate",
+    "COL_PRODUCT": "Product",
+    "COL_QTY": "Qty",
+    "COL_PRICE": "Price",
+    "COL_TOTAL": "Total",
+    "SHIPPING_LABEL": "Shipping",
+    "PAYMENT_LABEL": "Payment",
+    "REVIEW_HINT": "Leave a review for items in this order"
   },
   "PROFILE": {
     "TITLE": "My Profile",
@@ -186,7 +241,8 @@
     "EMPTY": "Your wishlist is empty.",
     "BROWSE_BTN": "Browse Products",
     "ADD_TO_CART": "Add to Cart",
-    "REMOVE": "Remove"
+    "REMOVE": "Remove",
+    "SAVE_HINT": "Save items you love to your wishlist to easily find them later."
   },
   "AUTH": {
     "LOGIN_TITLE": "Welcome Back",
@@ -226,7 +282,19 @@
     "CHAT_PLACEHOLDER": "Ask a follow-up question...",
     "ADD_TO_CART": "Add to Cart",
     "QUANTITY": "Qty",
-    "THINKING": "AI is thinking..."
+    "THINKING": "AI is thinking...",
+    "QUICK_1": "Need food for 3 months",
+    "QUICK_2": "Looking for toys to keep busy",
+    "QUICK_3": "Dental health treats",
+    "QUICK_4": "Need a harness for walks",
+    "QUICK_5": "My pet is overweight",
+    "QUICK_6": "Best food for senior pet",
+    "DOG": "Dog",
+    "CAT": "Cat",
+    "BIRD": "Bird",
+    "FISH": "Fish",
+    "REPTILE": "Reptile",
+    "SMALL_ANIMAL": "Small Animal"
   },
   "ADMIN": {
     "PRODUCTS_TITLE": "Product Management",
@@ -275,7 +343,19 @@
     "TAB_REVIEWS": "Reviews",
     "APPROVE": "Approve",
     "REJECT": "Reject",
-    "NO_PENDING": "No reviews pending approval"
+    "NO_PENDING": "No reviews pending approval",
+    "COL_TX_ID": "Tx ID",
+    "COL_ORDER_ID_TX": "Order ID",
+    "COL_PAYMENT_INTENT": "Payment Intent",
+    "COL_AMOUNT": "Amount",
+    "DEACTIVATE": "Deactivate",
+    "ACTIVATE": "Activate",
+    "REVIEWS_PENDING_COUNT": "review(s) awaiting approval",
+    "STATUS_ALL": "All Statuses",
+    "STATUS_PENDING_FILTER": "Pending",
+    "STATUS_PROCESSING_FILTER": "Processing",
+    "STATUS_SHIPPED_FILTER": "Shipped",
+    "STATUS_DELIVERED_FILTER": "Delivered"
   },
   "FOOTER": {
     "TAGLINE": "Premium products for your beloved pets.",
@@ -305,5 +385,26 @@
     "YES": "Yes",
     "NO": "No",
     "EUR": "€"
+  },
+  "TOAST": {
+    "ADDED_TO_CART": "Added to cart!",
+    "REMOVED_FROM_CART": "Removed from cart",
+    "CART_CLEARED": "Cart cleared",
+    "ADDED_TO_WISHLIST": "Added to wishlist!",
+    "REMOVED_FROM_WISHLIST": "Removed from wishlist",
+    "PROFILE_SAVED": "Profile saved!",
+    "REVIEW_SUBMITTED": "Review submitted successfully!",
+    "LOGIN_SUCCESS": "Welcome back!",
+    "LOGOUT_SUCCESS": "Logged out successfully",
+    "REGISTER_SUCCESS": "Account created successfully!",
+    "ERROR_GENERIC": "Something went wrong. Please try again.",
+    "PRODUCT_SAVED": "Product saved successfully!",
+    "PRODUCT_DELETED": "Product deleted",
+    "COUPON_SAVED": "Coupon saved!",
+    "COUPON_DELETED": "Coupon deleted",
+    "REVIEW_APPROVED": "Review approved!",
+    "REVIEW_REJECTED": "Review rejected",
+    "ORDER_STATUS_UPDATED": "Order status updated",
+    "COPIED": "Copied to clipboard!"
   }
 }

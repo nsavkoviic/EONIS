@@ -61,7 +61,11 @@
     "CTA_TITLE": "Niste sigurni šta vašem ljubimcu treba?",
     "CTA_SUBTITLE": "Naš AI asistent će analizirati profil vašeg ljubimca i preporučiti savršene proizvode.",
     "CTA_BTN": "Probaj AI asistenta",
-    "DISCOUNT_BANNER": "Koristite kod WELCOME10 za 10% popusta na prvu narudžbinu!"
+    "DISCOUNT_BANNER": "Koristite kod WELCOME10 za 10% popusta na prvu narudžbinu!",
+    "STAT_PRODUCTS": "Proizvoda",
+    "STAT_SHIPPING": "Dostava €50+",
+    "STAT_RATED": "Ocenjeno",
+    "STAT_FREE": "Besplatno"
   },
   "PRODUCTS": {
     "TITLE": "Naši proizvodi",
@@ -83,7 +87,13 @@
     "FOR_YOU": "Za vas",
     "OUT_OF_STOCK": "Nije dostupno",
     "AVAILABLE": "Dostupno",
-    "PAGE_OF": "od"
+    "PAGE_OF": "od",
+    "ALL_CATEGORIES": "Sve kategorije",
+    "CLEAR": "Obriši",
+    "ADD_WISHLIST": "Dodaj u listu želja",
+    "REMOVE_WISHLIST": "Ukloni iz liste želja",
+    "SORT_NEWEST": "Najnovije",
+    "ITEMS_PER_PAGE": "Stavki po stranici"
   },
   "PRODUCT_DETAIL": {
     "ADD_TO_CART": "Dodaj u korpu",
@@ -100,7 +110,20 @@
     "MUST_PURCHASE": "Kupite ovaj proizvod da biste ostavili recenziju.",
     "BACK_TO_PRODUCTS": "Nazad na proizvode",
     "IN_STOCK": "Na lageru",
-    "LOGIN_TO_REVIEW": "Prijavite se da ostavite recenziju"
+    "LOGIN_TO_REVIEW": "Prijavite se da ostavite recenziju",
+    "CUSTOMER_REVIEWS": "Recenzije kupaca",
+    "WRITE_REVIEW_TITLE": "Napišite recenziju",
+    "WRITE_REVIEW_SUBTITLE": "Podelite iskustvo sa ovim proizvodom",
+    "YOUR_RATING": "Vaša ocena",
+    "REVIEW_PLACEHOLDER": "Podelite iskustvo sa ovim proizvodom...",
+    "PUBLISH_REVIEW": "Objavi recenziju",
+    "PENDING_APPROVAL": "Vaša recenzija je primljena i čeka odobrenje admina. Hvala!",
+    "RATING_1": "Užasno",
+    "RATING_2": "Loše",
+    "RATING_3": "Solidno",
+    "RATING_4": "Dobro",
+    "RATING_5": "Odlično",
+    "SUBMITTING": "Slanje..."
   },
   "CART": {
     "TITLE": "Vaša korpa",
@@ -111,7 +134,11 @@
     "CHECKOUT_BTN": "Nastavi na plaćanje",
     "REMOVE": "Ukloni",
     "QUANTITY": "Količina",
-    "SUBTOTAL": "Međuzbir"
+    "SUBTOTAL": "Međuzbir",
+    "CLEAR_CART": "Isprazni korpu",
+    "EACH": "kom",
+    "ORDER_SUMMARY": "Pregled narudžbine",
+    "ITEMS_COUNT": "Stavke"
   },
   "CHECKOUT": {
     "TITLE": "Naručivanje",
@@ -137,7 +164,21 @@
     "ZIP": "Poštanski broj",
     "COUNTRY": "Država",
     "BACK_BTN": "Nazad",
-    "PAY_BTN": "Naruči i plati"
+    "PAY_BTN": "Naruči i plati",
+    "FREE_SHIPPING_BANNER": "Ostvarili ste besplatnu dostavu za ovu narudžbinu!",
+    "SELECT_SHIPPING": "Odaberite metodu dostave",
+    "HAVE_DISCOUNT": "Imate kod za popust?",
+    "CONTINUE": "Nastavi na podatke",
+    "DISCOUNT_PLACEHOLDER": "npr. WELCOME10",
+    "APPLY": "Primeni",
+    "INVALID_CODE": "Nevažeći ili istekli kod za popust",
+    "DISCOUNT_APPLIED": "popust primenjen!",
+    "BACK": "Nazad",
+    "PLACE_ORDER": "Naruči i plati",
+    "BUSINESS_DAYS_12": "1-2 radna dana",
+    "BUSINESS_DAYS_35": "3-5 radnih dana",
+    "BUSINESS_DAYS_57": "5-7 radnih dana",
+    "BUSINESS_DAYS_23": "2-3 radna dana"
   },
   "ORDERS": {
     "TITLE": "Moje narudžbine",
@@ -156,7 +197,21 @@
     "TIMELINE_SHIPPED": "Poslato",
     "TIMELINE_DELIVERED": "Isporučeno",
     "TIMELINE_CANCELLED": "Otkazano",
-    "TIMELINE_REFUNDED": "Refundirano"
+    "TIMELINE_REFUNDED": "Refundirano",
+    "STATUS_PENDING": "Na čekanju",
+    "STATUS_PROCESSING": "U obradi",
+    "STATUS_SHIPPED": "Poslato",
+    "STATUS_DELIVERED": "Isporučeno",
+    "STATUS_CANCELLED": "Otkazano",
+    "STATUS_REFUNDED": "Refundirano",
+    "RATE": "Oceni",
+    "COL_PRODUCT": "Proizvod",
+    "COL_QTY": "Kol.",
+    "COL_PRICE": "Cena",
+    "COL_TOTAL": "Ukupno",
+    "SHIPPING_LABEL": "Dostava",
+    "PAYMENT_LABEL": "Plaćanje",
+    "REVIEW_HINT": "Ostavite recenziju za stavke iz ove narudžbine"
   },
   "PROFILE": {
     "TITLE": "Moj profil",
@@ -186,7 +241,8 @@
     "EMPTY": "Vaša lista želja je prazna.",
     "BROWSE_BTN": "Pregledaj proizvode",
     "ADD_TO_CART": "Dodaj u korpu",
-    "REMOVE": "Ukloni"
+    "REMOVE": "Ukloni",
+    "SAVE_HINT": "Sačuvajte omiljene proizvode u listu želja da ih lako pronađete kasnije."
   },
   "AUTH": {
     "LOGIN_TITLE": "Dobrodošli nazad",
@@ -226,7 +282,19 @@
     "CHAT_PLACEHOLDER": "Postavite dodatno pitanje...",
     "ADD_TO_CART": "Dodaj u korpu",
     "QUANTITY": "Kol.",
-    "THINKING": "AI razmišlja..."
+    "THINKING": "AI razmišlja...",
+    "QUICK_1": "Treba mi hrana za 3 meseca",
+    "QUICK_2": "Tražim igračke za zabavu",
+    "QUICK_3": "Poslastice za zdravlje zuba",
+    "QUICK_4": "Treba mi povodac za šetnju",
+    "QUICK_5": "Moj ljubimac ima višak kilograma",
+    "QUICK_6": "Najbolja hrana za starijeg ljubimca",
+    "DOG": "Pas",
+    "CAT": "Mačka",
+    "BIRD": "Ptica",
+    "FISH": "Riba",
+    "REPTILE": "Reptil",
+    "SMALL_ANIMAL": "Mali ljubimac"
   },
   "ADMIN": {
     "PRODUCTS_TITLE": "Upravljanje proizvodima",
@@ -275,7 +343,19 @@
     "TAB_REVIEWS": "Recenzije",
     "APPROVE": "Odobri",
     "REJECT": "Odbaci",
-    "NO_PENDING": "Nema recenzija na čekanju"
+    "NO_PENDING": "Nema recenzija na čekanju",
+    "COL_TX_ID": "ID transakcije",
+    "COL_ORDER_ID_TX": "ID narudžbine",
+    "COL_PAYMENT_INTENT": "Payment Intent",
+    "COL_AMOUNT": "Iznos",
+    "DEACTIVATE": "Deaktiviraj",
+    "ACTIVATE": "Aktiviraj",
+    "REVIEWS_PENDING_COUNT": "recenzija čeka odobrenje",
+    "STATUS_ALL": "Svi statusi",
+    "STATUS_PENDING_FILTER": "Na čekanju",
+    "STATUS_PROCESSING_FILTER": "U obradi",
+    "STATUS_SHIPPED_FILTER": "Poslato",
+    "STATUS_DELIVERED_FILTER": "Isporučeno"
   },
   "FOOTER": {
     "TAGLINE": "Premium proizvodi za vaše drage ljubimce.",
@@ -305,5 +385,26 @@
     "YES": "Da",
     "NO": "Ne",
     "EUR": "€"
+  },
+  "TOAST": {
+    "ADDED_TO_CART": "Dodato u korpu!",
+    "REMOVED_FROM_CART": "Uklonjeno iz korpe",
+    "CART_CLEARED": "Korpa je ispraznjena",
+    "ADDED_TO_WISHLIST": "Dodato u listu želja!",
+    "REMOVED_FROM_WISHLIST": "Uklonjeno iz liste želja",
+    "PROFILE_SAVED": "Profil sačuvan!",
+    "REVIEW_SUBMITTED": "Recenzija uspešno poslata!",
+    "LOGIN_SUCCESS": "Dobrodošli nazad!",
+    "LOGOUT_SUCCESS": "Uspešno ste se odjavili",
+    "REGISTER_SUCCESS": "Nalog uspešno kreiran!",
+    "ERROR_GENERIC": "Došlo je do greške. Pokušajte ponovo.",
+    "PRODUCT_SAVED": "Proizvod uspešno sačuvan!",
+    "PRODUCT_DELETED": "Proizvod obrisan",
+    "COUPON_SAVED": "Kupon sačuvan!",
+    "COUPON_DELETED": "Kupon obrisan",
+    "REVIEW_APPROVED": "Recenzija odobrena!",
+    "REVIEW_REJECTED": "Recenzija odbijena",
+    "ORDER_STATUS_UPDATED": "Status narudžbine ažuriran",
+    "COPIED": "Kopirano!"
   }
 }
