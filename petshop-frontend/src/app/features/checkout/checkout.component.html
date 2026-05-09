@@ -1,0 +1,157 @@
+    <div class="checkout-container">
+      <h1 class="page-title"><mat-icon>shopping_bag</mat-icon> {{ 'CHECKOUT.TITLE' | translate }}</h1>
+
+      <mat-stepper [linear]="true" #stepper class="stepper">
+
+        <!-- STEP 1: Order Summary -->
+        <mat-step [label]="'CHECKOUT.STEP_SUMMARY' | translate">
+          <ng-container *ngIf="cart">
+
+            <div class="items-list">
+              <div class="item-row" *ngFor="let item of cart.items">
+                <img [src]="item.productImageUrl || 'https://placehold.co/48x48?text=?'"
+                     [alt]="item.productName" class="item-img">
+                <div class="item-info">
+                  <div class="item-name">{{ item.productName }}</div>
+                  <div class="item-meta">{{ item.quantity }} × {{ item.unitPrice | currency:'EUR' }}</div>
+                </div>
+                <div class="item-total">{{ item.totalPrice | currency:'EUR' }}</div>
+              </div>
+            </div>
+
+            <div class="free-shipping-banner" *ngIf="(cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD">
+              🎉 {{ 'CHECKOUT.FREE_SHIPPING_BANNER' | translate }}
+            </div>
+
+            <h3 class="section-label">{{ 'CHECKOUT.SELECT_SHIPPING' | translate }}</h3>
+            <div class="shipping-grid">
+              <div *ngFor="let opt of shippingOptions"
+                   class="shipping-card" [class.selected]="selectedShipping?.id === opt.id"
+                   (click)="selectedShipping = opt">
+                <div class="ship-logo">{{ opt.logo }}</div>
+                <div class="ship-name">{{ opt.name }}</div>
+                <div class="ship-price" [class.free-price]="(cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD">
+                  {{ (cart.totalPrice ?? 0) >= FREE_SHIPPING_THRESHOLD ? ('CHECKOUT.FREE' | translate) + ' 🎉' : (opt.price | currency:'EUR') }}
+                </div>
+                <div class="ship-days">{{ opt.estimatedDays | translate }}</div>
+              </div>
+            </div>
+
+            <h3 class="section-label">{{ 'CHECKOUT.HAVE_DISCOUNT' | translate }}</h3>
+            <div class="discount-row">
+              <mat-form-field appearance="outline" class="discount-input">
+                <mat-label>{{ 'CHECKOUT.DISCOUNT_LABEL' | translate }}</mat-label>
+                <input matInput [(ngModel)]="discountCode" [ngModelOptions]="{standalone:true}"
+                       [placeholder]="'CHECKOUT.DISCOUNT_PLACEHOLDER' | translate">
+                <mat-hint>{{ 'CHECKOUT.DISCOUNT_HINT' | translate }}</mat-hint>
+              </mat-form-field>
+              <button mat-raised-button color="accent" (click)="validateDiscount()"
+                [disabled]="isValidatingDiscount || !discountCode.trim()">
+                <mat-spinner diameter="16" *ngIf="isValidatingDiscount"></mat-spinner>
+                <span *ngIf="!isValidatingDiscount">{{ 'CHECKOUT.APPLY' | translate }}</span>
+              </button>
+            </div>
+            <div class="discount-success" *ngIf="discountResult?.isValid">
+              ✅ <strong>{{ discountResult!.code }}</strong> — {{ discountResult!.percent }}% {{ 'CHECKOUT.DISCOUNT_APPLIED' | translate }}
+            </div>
+            <div class="discount-error" *ngIf="discountError">{{ discountError }}</div>
+
+            <div class="summary-box">
+              <div class="summary-line">
+                <span>{{ 'CHECKOUT.SUBTOTAL' | translate }}</span><span>{{ cart.totalPrice | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-line discount-line" *ngIf="discountResult?.isValid">
+                <span>{{ 'CHECKOUT.DISCOUNT' | translate }} ({{ discountResult!.percent }}%)</span>
+                <span class="green">-{{ discountAmount | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-line">
+                <span>{{ 'CHECKOUT.SHIPPING' | translate }}</span>
+                <span [class.green]="shippingCost === 0">
+                  {{ shippingCost === 0 ? ('CHECKOUT.FREE' | translate) : (shippingCost | currency:'EUR') }}
+                </span>
+              </div>
+              <mat-divider style="margin:10px 0"></mat-divider>
+              <div class="summary-line">
+                <span>{{ 'CHECKOUT.TOTAL' | translate }}</span>
+                <span class="summary-total">{{ orderTotal | currency:'EUR' }}</span>
+              </div>
+            </div>
+
+            <div style="margin-top:20px">
+              <button mat-raised-button color="primary" matStepperNext
+                [disabled]="!selectedShipping">
+                {{ 'CHECKOUT.CONTINUE' | translate }} <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </mat-step>
+
+        <!-- STEP 2: Shipping Details -->
+        <mat-step [label]="'CHECKOUT.STEP_DETAILS' | translate" [stepControl]="shippingForm">
+          <form [formGroup]="shippingForm">
+
+            <div class="recap-bar" *ngIf="selectedShipping && cart">
+              <span>{{ selectedShipping.logo }} {{ selectedShipping.name }}</span>
+              <span>•</span>
+              <span>{{ cart.totalItems }} {{ cart.totalItems !== 1 ? ('CHECKOUT.ITEMS' | translate) : ('CHECKOUT.ITEM' | translate) }}</span>
+              <span>•</span>
+              <strong>{{ 'CHECKOUT.TOTAL' | translate }}: {{ orderTotal | currency:'EUR' }}</strong>
+            </div>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'CHECKOUT.FIRST_NAME' | translate }}</mat-label>
+                <input matInput formControlName="firstName">
+                <mat-error>{{ 'CHECKOUT.ERROR_REQUIRED' | translate }}</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'CHECKOUT.LAST_NAME' | translate }}</mat-label>
+                <input matInput formControlName="lastName">
+                <mat-error>{{ 'CHECKOUT.ERROR_REQUIRED' | translate }}</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'CHECKOUT.PHONE' | translate }}</mat-label>
+                <input matInput formControlName="phone" type="tel">
+                <mat-error>{{ 'CHECKOUT.ERROR_REQUIRED' | translate }}</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'CHECKOUT.STREET' | translate }}</mat-label>
+                <input matInput formControlName="street">
+                <mat-error>{{ 'CHECKOUT.ERROR_MIN3' | translate }}</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'CHECKOUT.CITY' | translate }}</mat-label>
+                <input matInput formControlName="city">
+                <mat-error>{{ 'CHECKOUT.ERROR_REQUIRED' | translate }}</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'CHECKOUT.ZIP' | translate }}</mat-label>
+                <input matInput formControlName="zipCode">
+                <mat-error>{{ 'CHECKOUT.ERROR_ZIP' | translate }}</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'CHECKOUT.COUNTRY' | translate }}</mat-label>
+                <input matInput formControlName="country">
+                <mat-error>{{ 'CHECKOUT.ERROR_REQUIRED' | translate }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="error-msg" *ngIf="errorMsg">
+              <mat-icon>error</mat-icon> {{ errorMsg }}
+            </div>
+
+            <div class="action-row">
+              <button mat-button matStepperPrevious type="button">
+                <mat-icon>arrow_back</mat-icon> {{ 'CHECKOUT.BACK' | translate }}
+              </button>
+              <button mat-raised-button color="primary" class="pay-btn"
+                type="button" [disabled]="isProcessing" (click)="placeOrder()">
+                <mat-spinner diameter="20" *ngIf="isProcessing" style="display:inline-block"></mat-spinner>
+                <span *ngIf="!isProcessing"><mat-icon>lock</mat-icon> {{ 'CHECKOUT.PLACE_ORDER' | translate }}</span>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+      </mat-stepper>
+    </div>

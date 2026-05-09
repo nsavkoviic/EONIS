@@ -1,0 +1,94 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a routerLink="/home" class="nav-logo">
+      <span class="logo-icon">🐾</span>
+      <span class="logo-text">PetShop</span>
+    </a>
+
+    <button class="hamburger" (click)="menuOpen = !menuOpen" [class.open]="menuOpen">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="nav-body" [class.open]="menuOpen">
+      <div class="nav-links">
+        <a routerLink="/home" routerLinkActive="active" class="nav-link">{{ 'NAV.HOME' | translate }}</a>
+        <a routerLink="/products" routerLinkActive="active" class="nav-link">{{ 'NAV.PRODUCTS' | translate }}</a>
+        <a routerLink="/ai-assistant" routerLinkActive="active" class="nav-link ai-nav-link">
+          <mat-icon style="font-size:16px;vertical-align:middle;margin-right:4px">auto_awesome</mat-icon>
+          {{ 'NAV.AI_ASSISTANT' | translate }}
+        </a>
+      </div>
+      <div class="nav-actions">
+        <ng-container *ngIf="auth.currentUser$ | async as user; else guestActions">
+          <button class="nav-icon-btn" routerLink="/cart" [matTooltip]="'NAV.CART' | translate">
+            <mat-icon [matBadge]="(cart.cart$ | async)?.totalItems || null"
+              [matBadgeHidden]="!((cart.cart$ | async)?.totalItems)" matBadgeColor="warn"
+              matBadgeSize="small">shopping_cart</mat-icon>
+          </button>
+          <button class="nav-icon-btn" routerLink="/wishlist" [matTooltip]="'NAV.WISHLIST' | translate">
+            <mat-icon [matBadge]="wishlistCount || null" [matBadgeHidden]="!wishlistCount" matBadgeColor="warn"
+              matBadgeSize="small">favorite</mat-icon>
+          </button>
+          <button class="user-chip-btn" [matMenuTriggerFor]="userMenu">
+            <div class="user-avatar">{{ user.firstName[0] }}</div>
+            <span class="user-first-name">{{ user.firstName }}</span>
+            <mat-icon class="chevron">expand_more</mat-icon>
+          </button>
+
+          <mat-menu #userMenu="matMenu" class="user-menu">
+            <!-- Profile header inside menu -->
+            <div class="menu-header" (click)="$event.stopPropagation()">
+              <div class="menu-avatar">{{ user.firstName[0] }}</div>
+              <div>
+                <div class="menu-name">{{ user.firstName }} {{ user.lastName }}</div>
+                <div class="menu-email">{{ user.email }}</div>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <a mat-menu-item routerLink="/profile">
+              <mat-icon>person</mat-icon> {{ 'NAV.PROFILE' | translate }}
+            </a>
+            <a mat-menu-item routerLink="/orders">
+              <mat-icon>receipt_long</mat-icon> {{ 'NAV.ORDERS' | translate }}
+            </a>
+            <mat-divider *ngIf="user.role === 'Admin'"></mat-divider>
+            <ng-container *ngIf="user.role === 'Admin'">
+              <div class="menu-section-label" (click)="$event.stopPropagation()">{{ 'NAV.ADMIN_PANEL' | translate }}
+              </div>
+              <a mat-menu-item routerLink="/admin/products">
+                <mat-icon>inventory_2</mat-icon> {{ 'NAV.ADMIN_PRODUCTS' | translate }}
+              </a>
+              <a mat-menu-item routerLink="/admin/orders">
+                <mat-icon>receipt_long</mat-icon> {{ 'NAV.ORDERS' | translate }}
+              </a>
+              <a mat-menu-item routerLink="/admin/transactions">
+                <mat-icon>payments</mat-icon> {{ 'NAV.ADMIN_TRANSACTIONS' | translate }}
+              </a>
+            </ng-container>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()" class="logout-item">
+              <mat-icon color="warn">logout</mat-icon>
+              <span style="color:#ef4444">{{ 'NAV.LOGOUT' | translate }}</span>
+            </button>
+          </mat-menu>
+        </ng-container>
+        <ng-template #guestActions>
+          <a routerLink="/auth/login" class="nav-link">{{ 'NAV.LOGIN' | translate }}</a>
+          <a routerLink="/auth/register" class="nav-btn-primary">{{ 'NAV.REGISTER' | translate }}</a>
+        </ng-template>
+
+        <div class="lang-toggle">
+          <button class="lang-btn" [class.active]="(currentLang$ | async) === 'en'" (click)="switchLang('en')"
+            title="English">
+            EN
+          </button>
+          <span class="lang-divider">|</span>
+          <button class="lang-btn" [class.active]="(currentLang$ | async) === 'sr'" (click)="switchLang('sr')"
+            title="Srpski">
+            SR
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

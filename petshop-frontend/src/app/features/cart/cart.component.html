@@ -1,0 +1,73 @@
+    <h1 class="page-title-warm">🛒 {{ 'CART.TITLE' | translate }}</h1>
+
+    <div class="spinner-wrap" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+
+    <!-- Empty -->
+    <div class="empty-state" *ngIf="!isLoading && (!cart || cart.items.length === 0)">
+      <mat-icon class="big-icon">shopping_cart</mat-icon>
+      <h3>{{ 'CART.EMPTY' | translate }}</h3>
+      <a mat-raised-button color="primary" routerLink="/products">{{ 'CART.BROWSE_BTN' | translate }}</a>
+    </div>
+
+    <!-- Cart content -->
+    <div class="cart-layout" *ngIf="!isLoading && cart && cart.items.length > 0">
+      <!-- Items -->
+      <div class="items-col">
+        <mat-card class="item-card" *ngFor="let item of cart.items">
+          <div class="item-row">
+            <img [src]="item.productImageUrl || 'https://placehold.co/80x80?text=?'"
+                 [alt]="item.productName" class="item-img">
+            <div class="item-info">
+              <div class="item-name">{{ item.productName }}</div>
+              <div class="item-price">{{ item.unitPrice | currency:'EUR' }} {{ 'CART.EACH' | translate }}</div>
+            </div>
+            <div class="item-qty">
+              <button mat-icon-button (click)="changeQty(item, item.quantity - 1)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="qty-display">{{ item.quantity }}</span>
+              <button mat-icon-button (click)="changeQty(item, item.quantity + 1)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <div class="item-total">{{ item.totalPrice | currency:'EUR' }}</div>
+            <button mat-icon-button color="warn" (click)="removeItem(item.productId)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+
+        <div class="clear-row">
+          <button mat-stroked-button color="warn" (click)="clearCart()">
+            <mat-icon>delete_sweep</mat-icon> {{ 'CART.CLEAR_CART' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-col">
+        <mat-card class="summary-card">
+          <mat-card-header>
+            <mat-card-title>{{ 'CART.ORDER_SUMMARY' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="summary-row">
+              <span>{{ 'CART.ITEMS_COUNT' | translate }} ({{ cart.totalItems }})</span>
+              <span>{{ cart.totalPrice | currency:'EUR' }}</span>
+            </div>
+            <mat-divider class="divider"></mat-divider>
+            <div class="summary-row total-row">
+              <strong>{{ 'CART.TOTAL' | translate }}</strong>
+              <strong>{{ cart.totalPrice | currency:'EUR' }}</strong>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" class="checkout-btn"
+              (click)="checkout()">
+              <mat-icon>payment</mat-icon> {{ 'CART.CHECKOUT_BTN' | translate }}
+            </button>
+            <a mat-button routerLink="/products" class="continue-btn">{{ 'CART.BROWSE_BTN' | translate }}</a>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>

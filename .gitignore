@@ -1,0 +1,102 @@
+# ============================================================
+#  PetShop — .gitignore
+#  Covers: .NET 8 backend, Angular 17 frontend, Windows/VS/VSCode
+# ============================================================
+
+# ── Secrets / Config (NEVER commit) ────────────────────────
+src/PetShop.API/appsettings.json
+src/PetShop.API/appsettings.Development.json
+appsettings.json
+appsettings.*.json
+!appsettings.example.json
+
+# Angular env (local secrets)
+petshop-frontend/src/environments/environment.ts
+
+# ── .NET / C# ───────────────────────────────────────────────
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+# NuGet
+packages/
+.nuget/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Build output / publish
+[Pp]ublish/
+[Pp]ublish[Oo]utput/
+TestResults/
+
+# Certificates
+*.pfx
+*.p12
+*.cer
+*.key
+*.pem
+
+# Rider / ReSharper
+_ReSharper*/
+*.resharper
+.idea/
+
+# ── Angular / Node ──────────────────────────────────────────
+node_modules/
+petshop-frontend/node_modules/
+petshop-frontend/dist/
+dist/
+petshop-frontend/.angular/
+.angular/
+
+# Angular environment secrets
+petshop-frontend/.env
+petshop-frontend/.env.*
+
+# ── Environment / secrets (general) ─────────────────────────
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ── Logs ────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# ── OS generated ────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ── Editor / IDE ────────────────────────────────────────────
+# JetBrains
+.idea/
+
+# VSCode — keep extensions.json (useful for team), ignore personal settings
+.vscode/settings.json
+.vscode/*.code-workspace
+.vscode/launch.json
+# Note: .vscode/extensions.json is intentionally NOT ignored
+
+# Visual Studio
+*.aps
+*.ncb
+*.sap
+*.sln.iml

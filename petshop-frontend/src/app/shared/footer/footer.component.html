@@ -1,0 +1,82 @@
+<footer class="footer">
+      <div class="footer-container">
+
+        <!-- Brand -->
+        <div class="footer-brand">
+          <a routerLink="/home" class="footer-logo">
+            <span class="logo-icon">🐾</span>
+            <span class="logo-text">PetShop</span>
+          </a>
+          <p class="footer-tagline">
+            {{ 'FOOTER.TAGLINE' | translate }}
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-btn" aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="Twitter">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h4 class="footer-heading">{{ 'FOOTER.ACCOUNT' | translate }}</h4>
+          <nav class="footer-nav">
+            <a routerLink="/home" class="footer-link">{{ 'NAV.HOME' | translate }}</a>
+            <a routerLink="/products" class="footer-link">{{ 'FOOTER.ALL_PRODUCTS' | translate }}</a>
+            <a routerLink="/cart" class="footer-link">{{ 'NAV.CART' | translate }}</a>
+            <a routerLink="/orders" class="footer-link">{{ 'FOOTER.MY_ORDERS' | translate }}</a>
+            <a routerLink="/wishlist" class="footer-link">{{ 'FOOTER.WISHLIST' | translate }}</a>
+            <a routerLink="/ai-assistant" class="footer-link">🤖 {{ 'NAV.AI_ASSISTANT' | translate }}</a>
+          </nav>
+        </div>
+
+        <!-- Categories -->
+        <div class="footer-col">
+          <h4 class="footer-heading">{{ 'FOOTER.SHOP' | translate }}</h4>
+          <nav class="footer-nav">
+            <a routerLink="/products" [queryParams]="{category: 0}" class="footer-link">🐕 {{ 'FOOTER.DOGS' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 1}" class="footer-link">🐈 {{ 'FOOTER.CATS' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 2}" class="footer-link">🐦 {{ 'FOOTER.BIRDS' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 3}" class="footer-link">🐠 {{ 'HOME.CATEGORY_FISH' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{category: 5}" class="footer-link">🐹 {{ 'HOME.CATEGORY_SMALL_ANIMALS' | translate }}</a>
+          </nav>
+        </div>
+
+        <!-- Customer Service -->
+        <div class="footer-col">
+          <h4 class="footer-heading">{{ 'FOOTER.CONTACT' | translate }}</h4>
+          <nav class="footer-nav">
+            <span class="footer-info">📧 support&#64;petshop.com</span>
+            <span class="footer-info">📞 +381 11 123 4567</span>
+            <span class="footer-info">🕐 Mon–Fri, 9am–6pm</span>
+          </nav>
+          <div class="payment-badges">
+            <span class="pay-badge">💳 Stripe</span>
+            <span class="pay-badge">🔒 Secure</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="footer-bottom">
+        <div class="footer-bottom-inner">
+          <span>© {{ year }} PetShop EONIS. {{ 'FOOTER.RIGHTS' | translate }}</span>
+          <span>Made with ❤️ for pet lovers</span>
+        </div>
+      </div>
+    </footer>

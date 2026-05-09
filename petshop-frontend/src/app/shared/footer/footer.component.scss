@@ -1,0 +1,63 @@
+.footer {
+      background: #1a1a2e; color: #cbd5e1;
+      margin-top: 64px;
+    }
+    .footer-container {
+      max-width: 1280px; margin: 0 auto; padding: 48px 24px 32px;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+    }
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; margin-bottom: 16px;
+    }
+    .logo-icon { font-size: 1.6rem; }
+    .logo-text {
+      font-size: 1.3rem; font-weight: 800;
+      background: linear-gradient(135deg, #fb8c00, #f57c00);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .footer-tagline {
+      font-size: .875rem; line-height: 1.6; color: #94a3b8;
+      margin: 0 0 20px; max-width: 240px;
+    }
+    .footer-social { display: flex; gap: 8px; }
+    .social-btn {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,255,255,.08); color: #94a3b8;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; transition: all .2s;
+    }
+    .social-btn:hover { background: #f57c00; color: white; }
+    .footer-heading {
+      font-size: .75rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #f57c00; margin: 0 0 16px;
+    }
+    .footer-nav { display: flex; flex-direction: column; gap: 10px; }
+    .footer-link {
+      color: #94a3b8; text-decoration: none; font-size: .875rem;
+      transition: color .15s;
+    }
+    .footer-link:hover { color: #f57c00; }
+    .footer-info { font-size: .875rem; color: #94a3b8; }
+    .payment-badges { display: flex; gap: 8px; margin-top: 16px; }
+    .pay-badge {
+      background: rgba(255,255,255,.08); padding: 4px 10px;
+      border-radius: 8px; font-size: .75rem; color: #94a3b8;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 16px 0;
+    }
+    .footer-bottom-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-bottom span { font-size: .8rem; color: #64748b; }
+    @media (max-width: 1024px) {
+      .footer-container { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .footer-container { grid-template-columns: 1fr; gap: 24px; padding: 32px 24px; }
+      .footer-bottom-inner { flex-direction: column; gap: 4px; text-align: center; }
+    }

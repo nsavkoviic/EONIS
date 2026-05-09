@@ -1,0 +1,99 @@
+    <div class="ai-page">
+      <div class="ai-header">
+        <div class="ai-header-icon">🤖</div>
+        <div>
+          <h1 class="ai-title">{{ 'AI.TITLE' | translate }}</h1>
+          <p class="ai-subtitle">{{ 'AI.SUBTITLE' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- PHASE 1: Pet Info Form -->
+      <div class="pet-form-card" *ngIf="phase === 1">
+        <h2 class="form-title">🐾 {{ 'AI.CARD_TITLE' | translate }}</h2>
+        <p class="form-hint">{{ 'AI.CARD_SUBTITLE' | translate }}</p>
+        <div class="form-grid">
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_NAME' | translate }}</mat-label><input matInput [(ngModel)]="petInfo.name" placeholder="e.g. Max"><mat-icon matSuffix>pets</mat-icon></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_TYPE' | translate }}</mat-label>
+            <mat-select [(ngModel)]="petInfo.species">
+              <mat-option value="dog">🐕 {{ 'AI.DOG' | translate }}</mat-option><mat-option value="cat">🐈 {{ 'AI.CAT' | translate }}</mat-option>
+              <mat-option value="bird">🐦 {{ 'AI.BIRD' | translate }}</mat-option><mat-option value="fish">🐠 {{ 'AI.FISH' | translate }}</mat-option>
+              <mat-option value="reptile">🦎 {{ 'AI.REPTILE' | translate }}</mat-option><mat-option value="small animal">🐹 {{ 'AI.SMALL_ANIMAL' | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_BREED' | translate }}</mat-label><input matInput [(ngModel)]="petInfo.breed" placeholder="e.g. Golden Retriever"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_GENDER' | translate }}</mat-label>
+            <mat-select [(ngModel)]="petInfo.sex"><mat-option value="male">{{ 'AI.MALE' | translate }}</mat-option><mat-option value="female">{{ 'AI.FEMALE' | translate }}</mat-option><mat-option value="unknown">Unknown</mat-option></mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_WEIGHT' | translate }}</mat-label><input matInput type="number" [(ngModel)]="petInfo.weightKg" placeholder="e.g. 25" min="0.1"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>{{ 'AI.PET_AGE' | translate }}</mat-label><input matInput type="number" [(ngModel)]="petInfo.ageYears" placeholder="e.g. 3" min="0"></mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width"><mat-label>{{ 'AI.DESCRIPTION' | translate }}</mat-label>
+          <textarea matInput [(ngModel)]="petInfo.problem" rows="3" [placeholder]="'AI.DESCRIPTION_PLACEHOLDER' | translate"></textarea>
+        </mat-form-field>
+        <div class="quick-prompts"><span class="quick-label">{{ 'AI.QUICK_TOPICS' | translate }}</span>
+          <button class="quick-chip" *ngFor="let q of quickPrompts" (click)="petInfo.problem = q.value">{{ q.label | translate }}</button>
+        </div>
+        <button class="start-btn" (click)="startChat()" [disabled]="!petInfo.species || !petInfo.problem.trim() || isLoading">
+          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+          <mat-icon *ngIf="!isLoading">auto_awesome</mat-icon>
+          {{ isLoading ? ('AI.THINKING' | translate) : ('AI.START_BTN' | translate) }}
+        </button>
+      </div>
+
+      <!-- PHASE 2: Chat + Recommendations -->
+      <div class="chat-layout" *ngIf="phase === 2">
+        <div class="chat-panel">
+          <div class="chat-pet-info">
+            <span class="pet-badge">{{ getSpeciesEmoji(petInfo.species) }} {{ petInfo.name || 'Your pet' }}
+              <span *ngIf="petInfo.weightKg">· {{ petInfo.weightKg }}kg</span>
+              <span *ngIf="petInfo.ageYears">· {{ petInfo.ageYears }}yr</span>
+            </span>
+            <button class="reset-btn" (click)="reset()"><mat-icon>refresh</mat-icon> New Session</button>
+          </div>
+          <div class="messages-wrap">
+            <div class="message" *ngFor="let msg of messages" [class.user-msg]="msg.role==='user'" [class.ai-msg]="msg.role==='assistant'">
+              <div class="msg-avatar" *ngIf="msg.role==='assistant'">🤖</div>
+              <div class="msg-bubble">
+                <div class="msg-text" [innerHTML]="formatMessage(msg.content)"></div>
+                <div class="msg-time">{{ msg.timestamp | date:'HH:mm' }}</div>
+              </div>
+              <div class="msg-avatar user-icon" *ngIf="msg.role==='user'"><mat-icon>person</mat-icon></div>
+            </div>
+            <div class="message ai-msg" *ngIf="isLoading">
+              <div class="msg-avatar">🤖</div>
+              <div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
+            </div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" [(ngModel)]="userInput" [placeholder]="'AI.CHAT_PLACEHOLDER' | translate" (keydown.enter)="sendMessage()" [disabled]="isLoading">
+            <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput.trim() || isLoading"><mat-icon>send</mat-icon></button>
+          </div>
+        </div>
+
+        <div class="products-panel">
+          <h3 class="panel-title"><mat-icon>recommend</mat-icon> Recommended Products</h3>
+          <div class="spinner-wrap" *ngIf="isLoading && recommendedProducts.length===0"><mat-spinner diameter="32"></mat-spinner><p>Analyzing your pet's needs...</p></div>
+          <div class="no-reco" *ngIf="!isLoading && recommendedProducts.length===0"><mat-icon>pets</mat-icon><p>Products will appear here after the AI analyzes your pet's needs</p></div>
+          <div class="reco-list">
+            <div class="reco-product-card" *ngFor="let reco of recommendedProducts">
+              <img [src]="reco.product?.imageUrl || 'https://placehold.co/80x80?text=?'" [alt]="reco.product?.name" class="reco-img" (click)="goToProduct(reco.productId)">
+              <div class="reco-info">
+                <div class="reco-name" (click)="goToProduct(reco.productId)">{{ reco.product?.name }}</div>
+                <div class="reco-reason">{{ reco.reason }}</div>
+                <div class="reco-footer">
+                  <span class="reco-price">{{ reco.product?.price | currency:'EUR' }}</span>
+                  <div class="reco-qty-row">
+                    <span class="qty-label">{{ 'AI.QUANTITY' | translate }}:</span>
+                    <button class="qty-btn" (click)="changeQty(reco,-1)">−</button>
+                    <span class="qty-val">{{ reco.quantity }}</span>
+                    <button class="qty-btn" (click)="changeQty(reco,1)">+</button>
+                    <button class="add-cart-btn" (click)="addToCart(reco)" [disabled]="!reco.product?.isAvailable || !isLoggedIn" [matTooltip]="!isLoggedIn ? 'Login to add to cart' : ''"><mat-icon>add_shopping_cart</mat-icon></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="add-all-btn" *ngIf="recommendedProducts.length > 1 && isLoggedIn" (click)="addAllToCart()"><mat-icon>shopping_cart</mat-icon> Add All to Cart</button>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,11 @@
+<div class="star-rating" [class.interactive]="interactive" [ngClass]="size">
+      <ng-container *ngFor="let star of stars; let i = index">
+        <mat-icon 
+          (click)="onStarClick(i + 1)"
+          [class.filled]="star === 'full'"
+          [class.half]="star === 'half'"
+          [class.empty]="star === 'empty'">
+          {{ getIconName(star) }}
+        </mat-icon>
+      </ng-container>
+    </div>

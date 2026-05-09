@@ -1,0 +1,76 @@
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">🐾 {{ 'HOME.HERO_BADGE' | translate }}</div>
+        <h1 class="hero-title">{{ 'HOME.HERO_TITLE' | translate }}</h1>
+        <p class="hero-subtitle">{{ 'HOME.HERO_SUBTITLE' | translate }}</p>
+        <div class="hero-actions">
+          <a mat-raised-button color="primary" routerLink="/products" class="hero-cta">
+            <mat-icon>shopping_bag</mat-icon> {{ 'HOME.HERO_BTN_SHOP' | translate }}
+          </a>
+          <a mat-stroked-button routerLink="/auth/register" class="hero-cta-secondary">
+            {{ 'HOME.HERO_BTN_AI' | translate }}
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong>500+</strong><span>{{ 'HOME.STAT_PRODUCTS' | translate }}</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><strong>{{ 'HOME.STAT_FREE' | translate }}</strong><span>{{ 'HOME.STAT_SHIPPING' | translate }}</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><strong>5★</strong><span>{{ 'HOME.STAT_RATED' | translate }}</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-blob"></div>
+        <div class="floating-card fc1">🐕 Royal Canin<br><small>{{ 'HOME.TICKER_JUST_ADDED' | translate }}</small></div>
+        <div class="floating-card fc2">⭐ {{ 'HOME.TICKER_TOP_RATED' | translate }}<br><small>KONG Classic</small></div>
+        <div class="floating-card fc3">🚚 {{ 'HOME.TICKER_FREE_SHIPPING' | translate }}<br><small>Orders €50+</small></div>
+        <div class="pet-emoji-grid">
+          <span>🐕</span><span>🐈</span><span>🐦</span>
+          <span>🐠</span><span>🦎</span><span>🐹</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features-section">
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let f of features"
+          [class.clickable]="f.route"
+          [routerLink]="f.route">
+          <div class="feature-icon">{{ f.icon }}</div>
+          <div class="feature-content">
+            <h3>{{ { 'Free Delivery': 'HOME.FEATURE_3_TITLE', 'Premium Quality': 'HOME.FEATURE_2_TITLE', 'Secure Payments': 'HOME.FEATURE_4_TITLE', 'AI Pet Assistant': 'HOME.FEATURE_1_TITLE' }[f.title]! | translate }}</h3>
+            <p>{{ { 'Free Delivery': 'HOME.FEATURE_3_DESC', 'Premium Quality': 'HOME.FEATURE_2_DESC', 'Secure Payments': 'HOME.FEATURE_4_DESC', 'AI Pet Assistant': 'HOME.FEATURE_1_DESC' }[f.title]! | translate }}</p>
+            <span class="feature-link" *ngIf="f.route">{{ 'HOME.CTA_TRY_NOW' | translate }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="categories-section">
+      <div class="section-header">
+        <h2>{{ 'HOME.CATEGORIES_TITLE' | translate }}</h2>
+        <p>{{ 'HOME.CATEGORIES_SUBTITLE' | translate }}</p>
+      </div>
+      <div class="categories-grid">
+        <button *ngFor="let c of categories"
+          class="category-card" (click)="goToCategory(c.value)">
+          <span class="cat-emoji">{{ c.icon }}</span>
+          <span class="cat-label">{{ { 'Dogs': 'HOME.CATEGORY_DOGS', 'Cats': 'HOME.CATEGORY_CATS', 'Birds': 'HOME.CATEGORY_BIRDS', 'Fish': 'HOME.CATEGORY_FISH', 'Reptiles': 'HOME.CATEGORY_REPTILES', 'Small Animals': 'HOME.CATEGORY_SMALL_ANIMALS' }[c.label]! | translate }}</span>
+          <mat-icon class="cat-arrow">arrow_forward</mat-icon>
+        </button>
+      </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <section class="cta-banner">
+      <div class="cta-content">
+        <h2>🎉 {{ 'HOME.CTA_TITLE' | translate }}</h2>
+        <p>{{ 'HOME.DISCOUNT_BANNER' | translate }}</p>
+        <a mat-raised-button routerLink="/auth/register" class="cta-btn">
+          {{ 'HOME.CTA_BTN' | translate }}
+        </a>
+      </div>
+    </section>

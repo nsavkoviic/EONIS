@@ -1,0 +1,319 @@
+    <h1>{{ 'ADMIN.TRANSACTIONS_TITLE' | translate }}</h1>
+
+    <!-- ── Summary Cards ─────────────────────────────────────────────────── -->
+    <div class="summary-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon">💰</div>
+          <div class="stat-label">{{ 'ADMIN.TOTAL_REVENUE' | translate }}</div>
+          <div class="stat-value green">{{ totalRevenue | currency:'EUR' }}</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon">📊</div>
+          <div class="stat-label">{{ 'ADMIN.TOTAL_TRANSACTIONS' | translate }}</div>
+          <div class="stat-value">{{ transactions.length }}</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon">✅</div>
+          <div class="stat-label">{{ 'ADMIN.SUCCESS_RATE' | translate }}</div>
+          <div class="stat-value green">{{ successRate }}</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- ── Tabs ───────────────────────────────────────────────────────────── -->
+    <mat-tab-group animationDuration="200ms" (selectedTabChange)="onTabChange($event)">
+
+      <!-- Tab 1: Transactions -->
+      <mat-tab [label]="'💳 ' + ('ADMIN.TAB_TRANSACTIONS' | translate)">
+        <div class="tab-content">
+          <form [formGroup]="filterForm" class="filter-bar">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'ADMIN.DATE_FROM' | translate }}</mat-label>
+              <input matInput [matDatepicker]="fp" formControlName="from">
+              <mat-datepicker-toggle matIconSuffix [for]="fp"></mat-datepicker-toggle>
+              <mat-datepicker #fp></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'ADMIN.DATE_TO' | translate }}</mat-label>
+              <input matInput [matDatepicker]="tp" formControlName="to">
+              <mat-datepicker-toggle matIconSuffix [for]="tp"></mat-datepicker-toggle>
+              <mat-datepicker #tp></mat-datepicker>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="applyFilters()">
+              <mat-icon>filter_list</mat-icon> Apply
+            </button>
+            <button mat-stroked-button (click)="clearFilters()">
+              <mat-icon>clear</mat-icon> Clear
+            </button>
+          </form>
+
+          <div class="spinner-wrap" *ngIf="txLoading"><mat-spinner></mat-spinner></div>
+
+          <div class="empty-state" *ngIf="!txLoading && transactions.length === 0">
+            <mat-icon class="big-icon">payments</mat-icon>
+            <p>{{ 'ADMIN.NO_TRANSACTIONS' | translate }}</p>
+          </div>
+
+          <div class="table-wrap" *ngIf="!txLoading && transactions.length > 0">
+            <table mat-table [dataSource]="transactions" class="full-table">
+              <ng-container matColumnDef="txId">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_TX_ID' | translate }}</th>
+                <td mat-cell *matCellDef="let t"><code>{{ t.id.slice(0,8).toUpperCase() }}</code></td>
+              </ng-container>
+              <ng-container matColumnDef="orderId">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_ORDER_ID_TX' | translate }}</th>
+                <td mat-cell *matCellDef="let t"><code>{{ t.orderId.slice(0,8).toUpperCase() }}</code></td>
+              </ng-container>
+              <ng-container matColumnDef="intent">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_PAYMENT_INTENT' | translate }}</th>
+                <td mat-cell *matCellDef="let t">
+                  <span [matTooltip]="t.stripePaymentIntentId || ''" class="truncate">
+                    {{ (t.stripePaymentIntentId || '—') | slice:0:20 }}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_AMOUNT' | translate }}</th>
+                <td mat-cell *matCellDef="let t"><strong>{{ t.amount | currency:'EUR' }}</strong></td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let t">
+                  <span class="status-chip" [ngClass]="getTxStatusClass(t.status)">
+                    {{ getTxStatusLabel(t.status) }}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let t">{{ t.createdAt | date:'dd MMM yyyy, HH:mm' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.ACTIONS' | translate }}</th>
+                <td mat-cell *matCellDef="let t">
+                  <button mat-stroked-button color="warn" class="refund-btn"
+                    *ngIf="t.status === PaymentStatus.Succeeded"
+                    (click)="markRefunded(t.orderId)">
+                    Refund
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="txCols"></tr>
+              <tr mat-row *matRowDef="let row; columns: txCols;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 2: Order Management -->
+      <mat-tab [label]="'📦 ' + ('ADMIN.TAB_ORDERS' | translate)">
+        <div class="tab-content">
+          <div class="filter-bar">
+            <mat-form-field appearance="outline" class="status-filter">
+              <mat-label>{{ 'ADMIN.FILTER_STATUS' | translate }}</mat-label>
+              <mat-select [(ngModel)]="orderStatusFilter" (ngModelChange)="loadOrders()">
+                <mat-option [value]="undefined">{{ 'ADMIN.STATUS_ALL' | translate }}</mat-option>
+                <mat-option *ngFor="let s of orderStatusOptions" [value]="s.value">{{ s.label | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="spinner-wrap" *ngIf="ordersLoading"><mat-spinner></mat-spinner></div>
+
+          <div class="table-wrap" *ngIf="!ordersLoading">
+            <table mat-table [dataSource]="orders" class="full-table">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_ORDER_ID' | translate }}</th>
+                <td mat-cell *matCellDef="let o"><code>#{{ o.id.slice(0,8).toUpperCase() }}</code></td>
+              </ng-container>
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_CUSTOMER' | translate }}</th>
+                <td mat-cell *matCellDef="let o">{{ o.userEmail }}</td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_DATE' | translate }}</th>
+                <td mat-cell *matCellDef="let o">{{ o.orderDate | date:'dd MMM yyyy' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_TOTAL' | translate }}</th>
+                <td mat-cell *matCellDef="let o"><strong>{{ o.totalAmount | currency:'EUR' }}</strong></td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_STATUS' | translate }}</th>
+                <td mat-cell *matCellDef="let o">
+                  <span class="status-chip" [ngClass]="getOrderStatusClass(o.status)">
+                    {{ getOrderStatusLabel(o.status) }}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="newStatus">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_UPDATE' | translate }}</th>
+                <td mat-cell *matCellDef="let o">
+                  <div class="update-row">
+                    <mat-select [(ngModel)]="selectedStatuses[o.id]" class="status-select">
+                      <mat-option *ngFor="let s of orderStatusOptions" [value]="s.value">{{ s.label | translate }}</mat-option>
+                    </mat-select>
+                    <button mat-icon-button color="primary" matTooltip="Save"
+                      (click)="updateOrderStatus(o.id, selectedStatuses[o.id])">
+                      <mat-icon>save</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="orderCols"></tr>
+              <tr mat-row *matRowDef="let row; columns: orderCols;"></tr>
+            </table>
+            <mat-paginator [length]="orderTotal" [pageSize]="orderPageSize"
+              [pageSizeOptions]="[10,25,50]" (page)="onOrderPage($event)">
+            </mat-paginator>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 3: Coupon Management -->
+      <mat-tab [label]="'🎟️ ' + ('ADMIN.TAB_COUPONS' | translate)">
+        <div class="tab-content">
+          <div class="coupon-header">
+            <button mat-raised-button color="primary" (click)="showCouponForm = !showCouponForm">
+              <mat-icon>{{ showCouponForm ? 'close' : 'add' }}</mat-icon>
+              {{ showCouponForm ? ('ADMIN.CANCEL' | translate) : ('ADMIN.ADD_COUPON' | translate) }}
+            </button>
+          </div>
+
+          <!-- Inline create form -->
+          <mat-card class="coupon-form-card" *ngIf="showCouponForm">
+            <mat-card-content>
+              <div class="coupon-form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Code</mat-label>
+                  <input matInput [(ngModel)]="newCoupon.code"
+                    (input)="newCoupon.code = newCoupon.code.toUpperCase()"
+                    placeholder="e.g. SUMMER25">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Discount %</mat-label>
+                  <input matInput type="number" [(ngModel)]="newCoupon.discountPercent"
+                    min="1" max="100">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Max Uses</mat-label>
+                  <input matInput type="number" [(ngModel)]="newCoupon.maxUses" min="1">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Expiry (optional)</mat-label>
+                  <input matInput [matDatepicker]="cpk" [(ngModel)]="newCoupon.expiresAt">
+                  <mat-datepicker-toggle matIconSuffix [for]="cpk"></mat-datepicker-toggle>
+                  <mat-datepicker #cpk></mat-datepicker>
+                </mat-form-field>
+                <button mat-raised-button color="accent" (click)="createCoupon()"
+                  [disabled]="!newCoupon.code.trim()">
+                  <mat-icon>check</mat-icon> Create
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="spinner-wrap" *ngIf="couponsLoading"><mat-spinner></mat-spinner></div>
+
+          <div class="table-wrap" *ngIf="!couponsLoading && coupons.length > 0">
+            <table mat-table [dataSource]="coupons" class="full-table">
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_CODE' | translate }}</th>
+                <td mat-cell *matCellDef="let c">
+                  <code class="coupon-code">{{ c.code }}</code>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="percent">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_DISCOUNT' | translate }}</th>
+                <td mat-cell *matCellDef="let c"><strong>{{ c.discountPercent }}%</strong></td>
+              </ng-container>
+              <ng-container matColumnDef="uses">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_USES' | translate }}</th>
+                <td mat-cell *matCellDef="let c">{{ c.usedCount }} / {{ c.maxUses }}</td>
+              </ng-container>
+              <ng-container matColumnDef="expires">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_EXPIRES' | translate }}</th>
+                <td mat-cell *matCellDef="let c">
+                  {{ c.expiresAt ? (c.expiresAt | date:'dd MMM yyyy') : ('ADMIN.NEVER' | translate) }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let c">
+                  <span class="status-chip" [ngClass]="c.isActive ? 'status-active' : 'status-inactive'">
+                    {{ c.isActive ? ('ADMIN.STATUS_ACTIVE' | translate) : ('ADMIN.STATUS_INACTIVE' | translate) }}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="couponActions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.ACTIONS' | translate }}</th>
+                <td mat-cell *matCellDef="let c">
+                  <button mat-stroked-button [color]="c.isActive ? 'warn' : 'primary'" class="action-btn"
+                    (click)="toggleCoupon(c.id, !c.isActive)">
+                    {{ c.isActive ? ('ADMIN.DEACTIVATE' | translate) : ('ADMIN.ACTIVATE' | translate) }}
+                  </button>
+                  <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteCoupon(c.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="couponCols"></tr>
+              <tr mat-row *matRowDef="let row; columns: couponCols;"></tr>
+            </table>
+          </div>
+
+          <div class="empty-state" *ngIf="!couponsLoading && coupons.length === 0">
+            <mat-icon class="big-icon">confirmation_number</mat-icon>
+            <p>No coupons yet. Create your first one!</p>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 4: Reviews Moderation -->
+      <mat-tab [label]="'⭐ ' + ('ADMIN.TAB_REVIEWS' | translate)">
+        <div class="tab-content">
+          <div class="tab-header-info" *ngIf="pendingReviews.length > 0">
+            {{ pendingReviews.length }} {{ 'ADMIN.REVIEWS_PENDING_COUNT' | translate }}
+          </div>
+
+          <div class="spinner-wrap" *ngIf="reviewsLoading"><mat-spinner></mat-spinner></div>
+
+          <div class="empty-state" *ngIf="!reviewsLoading && pendingReviews.length === 0">
+            <mat-icon class="big-icon">rate_review</mat-icon>
+            <p>{{ 'ADMIN.NO_PENDING' | translate }}</p>
+          </div>
+
+          <div class="review-moderation-list" *ngIf="!reviewsLoading && pendingReviews.length > 0">
+            <mat-card class="review-mod-card" *ngFor="let r of pendingReviews">
+              <div class="mod-header">
+                <div class="mod-avatar">{{ r.userName[0] }}</div>
+                <div class="mod-info">
+                  <strong>{{ r.userName }}</strong>
+                  <span class="mod-product">on {{ r.productName }}</span>
+                  <span class="mod-date">{{ r.createdAt | date:'dd MMM yyyy' }}</span>
+                </div>
+                <div class="mod-rating">
+                  <mat-icon *ngFor="let s of [1,2,3,4,5]"
+                    [style.color]="s <= r.rating ? '#f59e0b' : '#d1d5db'"
+                    style="font-size:16px">star</mat-icon>
+                </div>
+              </div>
+              <p class="mod-comment">{{ r.comment }}</p>
+              <div class="mod-actions">
+                <button mat-raised-button color="primary" (click)="approveReview(r)">
+                  <mat-icon>check</mat-icon> {{ 'ADMIN.APPROVE' | translate }}
+                </button>
+                <button mat-stroked-button color="warn" (click)="deleteReview(r)">
+                  <mat-icon>delete</mat-icon> {{ 'ADMIN.REJECT' | translate }}
+                </button>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>

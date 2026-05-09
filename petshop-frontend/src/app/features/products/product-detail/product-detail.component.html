@@ -1,0 +1,139 @@
+    <div class="spinner-wrap" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+
+    <div class="not-found" *ngIf="!isLoading && !product">
+      <mat-icon class="big-icon">search_off</mat-icon>
+      <h2>{{ 'PRODUCT_DETAIL.NOT_FOUND' | translate }}</h2>
+      <a mat-raised-button color="primary" routerLink="/products">{{ 'PRODUCT_DETAIL.BACK_TO_PRODUCTS' | translate }}</a>
+    </div>
+
+    <div class="detail-layout" *ngIf="!isLoading && product">
+      <!-- Left: Image -->
+      <div class="img-col">
+        <img [src]="product!.imageUrl || 'https://placehold.co/500x400?text=No+Image'"
+             [alt]="product!.name" class="product-img">
+      </div>
+
+      <!-- Right: Info -->
+      <div class="info-col">
+        <mat-chip-set>
+          <mat-chip>{{ getCategoryLabel(product!.category) }}</mat-chip>
+        </mat-chip-set>
+
+        <h1 class="product-name">{{ product!.name }}</h1>
+        <div class="rating-summary" *ngIf="reviewSummary && reviewSummary.totalReviews > 0">
+          <app-star-rating [rating]="reviewSummary.averageRating" size="sm"></app-star-rating>
+          <span class="rating-text">{{ reviewSummary.averageRating.toFixed(1) }}</span>
+          <span class="rating-count">({{ reviewSummary.totalReviews }} {{ 'PRODUCT_DETAIL.REVIEWS' | translate }})</span>
+        </div>
+        <div class="price">{{ product!.price | currency:'EUR' }}</div>
+
+        <span class="stock-badge" [class.in-stock]="product!.isAvailable"
+              [class.out-stock]="!product!.isAvailable">
+          {{ product!.isAvailable ? ('PRODUCT_DETAIL.IN_STOCK' | translate) : ('PRODUCT_DETAIL.OUT_OF_STOCK' | translate) }}
+        </span>
+
+        <mat-divider class="divider"></mat-divider>
+        <p class="description">{{ product!.description }}</p>
+        <mat-divider class="divider"></mat-divider>
+
+        <div class="qty-row" *ngIf="product!.isAvailable">
+          <label>{{ 'PRODUCT_DETAIL.QUANTITY' | translate }}:</label>
+          <input type="number" [(ngModel)]="quantity"
+                 [min]="1" [max]="product!.stockQuantity" class="qty-input">
+          <span class="stock-hint">{{ product!.stockQuantity }} {{ 'PRODUCT_DETAIL.AVAILABLE' | translate }}</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button mat-raised-button color="primary" class="add-btn"
+            [disabled]="!product!.isAvailable || !isLoggedIn"
+            (click)="addToCart()">
+            <mat-icon>add_shopping_cart</mat-icon> {{ 'PRODUCT_DETAIL.ADD_TO_CART' | translate }}
+          </button>
+
+          <button mat-icon-button (click)="toggleWishlist()" class="wishlist-btn"
+            [class.in-wishlist]="isInWishlist" *ngIf="isLoggedIn">
+            <mat-icon>{{ isInWishlist ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+        </div>
+
+        <p class="login-hint" *ngIf="!isLoggedIn">
+          <mat-icon>info</mat-icon>
+          {{ 'PRODUCT_DETAIL.LOGIN_HINT_1' | translate }} <a routerLink="/auth/login">{{ 'PRODUCT_DETAIL.LOGIN_HINT_2' | translate }}</a> {{ 'PRODUCT_DETAIL.LOGIN_HINT_3' | translate }}
+        </p>
+
+        <a mat-button routerLink="/products" class="back-link">
+          <mat-icon>arrow_back</mat-icon> {{ 'PRODUCT_DETAIL.BACK_TO_PRODUCTS' | translate }}
+        </a>
+      </div>
+    </div>
+
+    <section class="reviews-section" *ngIf="!isLoading && product" id="reviews">
+      <h2 class="reviews-title">{{ 'PRODUCT_DETAIL.CUSTOMER_REVIEWS' | translate }}</h2>
+
+      <!-- Write review (only if logged in, purchased, not yet reviewed) -->
+      <div class="write-review" *ngIf="isLoggedIn && reviewSummary?.userCanReview">
+        <div class="review-form-header">
+          <div class="review-avatar">{{ (authSvc.currentUser$ | async)?.firstName?.[0] ?? 'U' }}</div>
+          <div>
+            <div class="review-form-title">{{ 'PRODUCT_DETAIL.WRITE_REVIEW_TITLE' | translate }}</div>
+            <div class="review-form-subtitle">{{ 'PRODUCT_DETAIL.WRITE_REVIEW_SUBTITLE' | translate }}</div>
+          </div>
+        </div>
+
+        <div class="star-select">
+          <span class="star-label">{{ 'PRODUCT_DETAIL.YOUR_RATING' | translate }}:</span>
+          <app-star-rating [rating]="newReview.rating" [interactive]="true" size="lg"
+            (ratingChange)="newReview.rating = $event"></app-star-rating>
+          <span class="rating-hint" *ngIf="newReview.rating > 0">
+            {{ getRatingLabel(newReview.rating) }}
+          </span>
+        </div>
+
+        <div class="comment-wrap">
+          <textarea class="review-textarea" [(ngModel)]="newReview.comment"
+            rows="4" maxlength="1000"
+            [placeholder]="'PRODUCT_DETAIL.REVIEW_PLACEHOLDER' | translate">
+          </textarea>
+          <div class="char-count">{{ newReview.comment.length }}/1000</div>
+        </div>
+
+        <button class="submit-review-btn"
+          (click)="submitReview()" [disabled]="isSubmittingReview">
+          <mat-icon *ngIf="!isSubmittingReview">send</mat-icon>
+          <span *ngIf="isSubmittingReview" style="display:inline-flex;align-items:center;gap:6px">⏳ {{ 'PRODUCT_DETAIL.SUBMITTING' | translate }}</span>
+          {{ isSubmittingReview ? '' : ('PRODUCT_DETAIL.PUBLISH_REVIEW' | translate) }}
+        </button>
+      </div>
+
+      <div class="review-pending" *ngIf="reviewSubmittedPending">
+        <mat-icon>schedule</mat-icon>
+        {{ 'PRODUCT_DETAIL.PENDING_APPROVAL' | translate }}
+      </div>
+
+      <div class="already-reviewed" *ngIf="isLoggedIn && reviewSummary?.userHasReviewed && !reviewSummary?.userCanReview && !reviewSubmittedPending">
+        <mat-icon>check_circle</mat-icon> {{ 'PRODUCT_DETAIL.ALREADY_REVIEWED' | translate }}
+      </div>
+
+      <!-- Review list -->
+      <div class="review-list">
+        <div class="review-card" *ngFor="let r of reviewSummary?.reviews">
+          <div class="review-header">
+            <div class="reviewer-avatar">{{ r.userName[0] }}</div>
+            <div class="reviewer-info">
+              <span class="reviewer-name">{{ r.userName }}</span>
+              <span class="review-date">{{ r.createdAt | date:'dd MMM yyyy' }}</span>
+            </div>
+            <app-star-rating [rating]="r.rating" size="sm"></app-star-rating>
+            <button mat-icon-button color="warn" *ngIf="isAdmin || currentUserId === r.userId"
+              (click)="deleteReview(r.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <p class="review-comment">{{ r.comment }}</p>
+        </div>
+        <div class="no-reviews" *ngIf="reviewSummary?.reviews?.length === 0">
+          <mat-icon>rate_review</mat-icon>
+          <p>{{ 'PRODUCT_DETAIL.NO_REVIEWS' | translate }}</p>
+        </div>
+      </div>
+    </section>
